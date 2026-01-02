@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge 组件示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            margin-top: 0;
+            color: #444;
+        }
+        
+        .badge-container {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+        }
+        
+        /* Badge 基础样式 */
+        .badge {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .head-example {
+            display: inline-block;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            background-color: #eee;
+        }
+        
+        .basic-example {
+            display: inline-block;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            background: #eee;
+        }
+        
+        /* Badge 样式 */
+        .badge .badge-content {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            height: 20px;
+            min-width: 20px;
+            padding: 0 6px;
+            border-radius: 10px;
+            background-color: #ff5b5b;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            line-height: 20px;
+            box-sizing: border-box;
+        }
+        
+        .badge .badge-dot {
+            top: -4px;
+            right: -4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            min-width: auto;
+        }
+        
+        .badge .badge-content.no-overflow::after {
+            content: "+";
+        }
+        
+        .next-badge {
+            margin-right: 24px;
+        }
+        
+        .flex-center {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .example-item {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .example-label {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Badge 组件示例</h1>
+        
+        <div class="section">
+            <h2 class="section-title">基本用法</h2>
+            <div class="flex-center">
+                <div class="example-item">
+                    <div class="badge">
+                        <span class="basic-example"></span>
+                        <span class="badge-content">5</span>
+                    </div>
+                    <div class="example-label">基本徽标</div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="badge">
+                        <span class="basic-example"></span>
+                        <span class="badge-content dot">99+</span>
+                    </div>
+                    <div class="example-label">封顶数字</div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="badge">
+                        <span class="basic-example"></span>
+                        <span class="badge-content badge-dot"></span>
+                    </div>
+                    <div class="example-label">点状徽标</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">不同参数演示</h2>
+            <div class="flex-center">
+                <div class="example-item">
+                    <div class="badge">
+                        <a href="#" class="head-example"></a>
+                        <span class="badge-content">5</span>
+                    </div>
+                    <div class="example-label">徽标依托内容</div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="badge">
+                        <a href="#" class="head-example"></a>
+                        <span class="badge-content">0</span>
+                    </div>
+                    <div class="example-label">count为0时隐藏</div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="badge">
+                        <a href="#" class="head-example"></a>
+                        <span class="badge-content">0</span>
+                    </div>
+                    <div class="example-label">showZero=true时显示</div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="badge">
+                        <a href="#" class="head-example"></a>
+                        <span class="badge-content">100</span>
+                    </div>
+                    <div class="example-label">overflowCount=99封顶</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">API 参数说明</h2>
+            <table border="1" style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #f5f5f5;">
+                        <th>参数</th>
+                        <th>说明</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>版本支持</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>count</td>
+                        <td>展示的数字，大于 overflowCount 时显示为 `${overflowCount}+`，为 0 时默认隐藏</td>
+                        <td>Number/String</td>
+                        <td>0</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>dot</td>
+                        <td>不展示数字，只展示一个小红点</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>自定义徽标中的内容</td>
+                        <td>ReactNode</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>children</td>
+                        <td>徽标依托的内容，一般显示在其右上方</td>
+                        <td>ReactNode</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>overflowCount</td>
+                        <td>展示的封顶的数字</td>
+                        <td>Number/String</td>
+                        <td>99</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>showZero</td>
+                        <td>当 count 为 0 时，是否显示 count</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>1.16</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">说明</h2>
+            <p>Badge 组件来自于 <a href="https://gitee.com/tongyilingma/ui-components-wiki/blob/master/basic/badge.md">https://gitee.com/tongyilingma/ui-components-wiki/blob/master/basic/badge.md</a></p>
+            <p>徽标组件通常用于显示通知数量、状态提示等信息，可以依附在其他组件上，如头像、按钮等。</p>
+        </div>
+    </div>
+</body>
+</html>

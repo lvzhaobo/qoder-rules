@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form 组件示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        
+        .section-title {
+            margin-top: 0;
+            color: #444;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .required label::before {
+            content: "* ";
+            color: red;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: #1080ff;
+            color: white;
+        }
+        
+        .btn-default {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        
+        .error {
+            color: #ff5b5b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .help-text {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f5f5f5;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .checkbox-item input, .radio-item input {
+            width: auto;
+        }
+        
+        .form-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        
+        .form-inline .form-group {
+            margin-bottom: 0;
+        }
+        
+        .form-inline label {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form 组件示例</h1>
+        
+        <div class="section">
+            <h2 class="section-title">基本表单</h2>
+            <form id="basicForm">
+                <div class="form-group required">
+                    <label for="username">用户名:</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                    <div class="help-text">请输入您的用户名</div>
+                </div>
+                
+                <div class="form-group required">
+                    <label for="password">密码:</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="agreement" value="1"> 同意协议
+                    </label>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">提交</button>
+                    <button type="reset" class="btn-default">重置</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">表单布局 - 水平排列</h2>
+            <form id="horizontalForm" class="form-inline">
+                <div class="form-group">
+                    <label for="inlineUser">用户名:</label>
+                    <input type="text" id="inlineUser" name="inlineUser" placeholder="请输入用户名">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inlinePass">密码:</label>
+                    <input type="password" id="inlinePass" name="inlinePass" placeholder="请输入密码">
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">表单校验示例</h2>
+            <form id="validationForm">
+                <div class="form-group required">
+                    <label for="email">邮箱:</label>
+                    <input type="email" id="email" name="email" placeholder="请输入邮箱" required>
+                    <div class="error" id="emailError" style="display:none;">请输入有效的邮箱地址</div>
+                </div>
+                
+                <div class="form-group required">
+                    <label for="phone">手机号:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="请输入手机号" required>
+                    <div class="error" id="phoneError" style="display:none;">请输入有效的手机号</div>
+                </div>
+                
+                <div class="form-group required">
+                    <label>性别:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="male" name="gender" value="male">
+                            <label for="male">男</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="female" name="gender" value="female">
+                            <label for="female">女</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comment">备注:</label>
+                    <textarea id="comment" name="comment" rows="4" placeholder="请输入备注"></textarea>
+                    <div class="help-text">最多输入20个字符</div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">提交</button>
+                    <button type="reset" class="btn-default">重置</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">复杂表单示例</h2>
+            <form id="complexForm">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group required">
+                            <label for="firstName">名:</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="请输入名" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group required">
+                            <label for="lastName">姓:</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="请输入姓" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">国家:</label>
+                    <select id="country" name="country">
+                        <option value="">请选择国家</option>
+                        <option value="china">中国</option>
+                        <option value="us">美国</option>
+                        <option value="japan">日本</option>
+                        <option value="korea">韩国</option>
+                        <option value="thailand">泰国</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>兴趣爱好:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="reading" name="hobbies" value="reading">
+                            <label for="reading">阅读</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sports" name="hobbies" value="sports">
+                            <label for="sports">运动</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="music" name="hobbies" value="music">
+                            <label for="music">音乐</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="travel" name="hobbies" value="travel">
+                            <label for="travel">旅行</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">提交</button>
+                    <button type="button" class="btn-default" onclick="validateForm()">验证表单</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Form API 参数说明</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>说明</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>inline</td>
+                        <td>内联表单</td>
+                        <td>Boolean</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>size</td>
+                        <td>单个 Item 的 size 自定义</td>
+                        <td>Enum: 'large', 'medium', 'small'</td>
+                        <td>'medium'</td>
+                    </tr>
+                    <tr>
+                        <td>labelAlign</td>
+                        <td>标签的位置</td>
+                        <td>Enum: 'top', 'left', 'inset'</td>
+                        <td>'left'</td>
+                    </tr>
+                    <tr>
+                        <td>field</td>
+                        <td>field 实例</td>
+                        <td>any</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>onSubmit</td>
+                        <td>提交表单时触发</td>
+                        <td>Function</td>
+                        <td>preventDefault</td>
+                    </tr>
+                    <tr>
+                        <td>device</td>
+                        <td>预设屏幕宽度</td>
+                        <td>Enum: 'phone', 'tablet', 'desktop'</td>
+                        <td>'desktop'</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Form.Item API 参数说明</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>说明</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>label</td>
+                        <td>label 标签的文本</td>
+                        <td>ReactNode</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>required</td>
+                        <td>不能为空</td>
+                        <td>Boolean</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>help</td>
+                        <td>自定义提示信息</td>
+                        <td>ReactNode</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>validateState</td>
+                        <td>校验状态</td>
+                        <td>Enum: 'error', 'success', 'loading', 'warning'</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>hasFeedback</td>
+                        <td>是否展示校验状态图标</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>format</td>
+                        <td>四种常用的 pattern</td>
+                        <td>Enum: 'number', 'email', 'url', 'tel'</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">说明</h2>
+            <p>Form 组件来自于 <a href="https://gitee.com/tongyilingma/ui-components-wiki/blob/master/basic/form.md">https://gitee.com/tongyilingma/ui-components-wiki/blob/master/basic/form.md</a></p>
+            <p>表单组件用于数据收集、校验和提交功能。支持多种布局方式，包括水平布局、垂直布局和行内布局。</p>
+            <p>表单校验可以使用内置规则（如required、email等）或自定义校验函数实现。</p>
+        </div>
+    </div>
+
+    <script>
+        // 基本表单提交处理
+        document.getElementById('basicForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('基本表单提交成功！');
+        });
+        
+        // 水平表单提交处理
+        document.getElementById('horizontalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('水平表单提交成功！');
+        });
+        
+        // 表单校验示例
+        document.getElementById('validationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const gender = document.querySelector('input[name="gender"]:checked');
+            
+            let isValid = true;
+            
+            // 验证邮箱
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+            }
+            
+            // 验证手机号
+            const phoneRegex = /^1[3-9]\d{9}$/;
+            if (!phoneRegex.test(phone)) {
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('phoneError').style.display = 'none';
+            }
+            
+            // 验证性别是否选择
+            if (!gender) {
+                alert('请选择性别');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                alert('表单校验通过，提交成功！');
+            }
+        });
+        
+        // 复杂表单提交处理
+        document.getElementById('complexForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('复杂表单提交成功！');
+        });
+        
+        // 验证表单函数
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            
+            if (!firstName || !lastName) {
+                alert('请填写完整信息');
+            } else {
+                alert('表单验证通过');
+            }
+        }
+    </script>
+</body>
+</html>
