@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>员工 AI Coding 实践画布 - 个人视角</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        /* 打印设置：A3 横向，白色背景 */
+        @page {
+            size: A3 landscape;
+            margin: 10mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI",
+                "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+            color: #111827;
+        }
+
+        body {
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            padding: 8mm;
+            display: flex;
+            flex-direction: column;
+            gap: 4mm;
+            background: #ffffff;
+        }
+
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #111827;
+            padding-bottom: 3mm;
+        }
+
+        .canvas-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1mm;
+        }
+
+        .canvas-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .canvas-subtitle {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .canvas-tag {
+            font-size: 10px;
+            color: #374151;
+            padding: 1mm 3mm;
+            border-radius: 3mm;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 4mm;
+            flex: 1;
+        }
+
+        .canvas-grid-wide {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 4mm;
+        }
+
+        .block {
+            border: 1px solid #e5e7eb;
+            border-radius: 2mm;
+            padding: 3mm;
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+        }
+
+        .block-red {
+            border: 2px solid #dc2626;
+            background: #fef2f2;
+        }
+
+        .block-yellow {
+            border: 2px solid #f59e0b;
+            background: #fffbeb;
+        }
+
+        .block-green {
+            border: 2px solid #10b981;
+            background: #f0fdf4;
+        }
+
+        .block-blue {
+            border: 2px solid #3b82f6;
+            background: #eff6ff;
+        }
+
+        .block-title {
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5mm;
+            margin-bottom: 1mm;
+        }
+
+        .block-tagline {
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: -1mm;
+        }
+
+        .section-row {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5mm;
+        }
+
+        .section-row-title {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .mini-note {
+            font-size: 10px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .checklist {
+            font-size: 10px;
+            padding-left: 3mm;
+        }
+
+        .checklist li {
+            margin-bottom: 1mm;
+        }
+
+        .checklist strong {
+            font-weight: 600;
+        }
+
+        .small-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        .small-table th,
+        .small-table td {
+            border: 1px solid #e5e7eb;
+            padding: 1mm 1.5mm;
+            text-align: left;
+        }
+
+        .small-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5mm 2mm;
+            border-radius: 2mm;
+            font-size: 9px;
+            font-weight: 600;
+            margin-right: 1mm;
+        }
+
+        .badge-red {
+            background: #dc2626;
+            color: white;
+        }
+
+        .badge-yellow {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .badge-green {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-blue {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2mm;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .canvas {
+                padding: 6mm;
+            }
+            .canvas-grid,
+            .canvas-grid-wide {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="canvas">
+    <!-- 头部：标题 + 关键信息 -->
+    <div class="canvas-header">
+        <div class="canvas-title-block">
+            <div class="canvas-title">员工 AI Coding 实践画布（个人视角）</div>
+            <div class="canvas-subtitle">
+                从入门到精通：AI 辅助编程的核心原则、沟通技巧、问题解决与持续成长
+            </div>
+        </div>
+        <div>
+            <div class="canvas-tag">A3 画布 · 白底简约 · 适合打印桌面常备</div>
+        </div>
+    </div>
+
+    <!-- 第一层：红线原则 + 核心理念 + 快速上手 -->
+    <div class="canvas-grid">
+        <!-- 左：安全红线（必须遵守） -->
+        <div class="block block-red">
+            <div class="block-title">🛡️ 1. 安全红线（绝对禁区）</div>
+            <div class="block-tagline">违反即可能导致数据泄露或合规风险，必须零容忍</div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-red">禁止</span>数据脱敏失败</div>
+                <ul class="checklist">
+                    <li>❌ <strong>禁止直接粘贴</strong>：AK/SK、数据库密码、客户 PII（个人敏感信息）</li>
+                    <li>❌ <strong>禁止上传真实数据</strong>：生产环境配置文件、客户订单数据、日志明文</li>
+                    <li>✅ <strong>必须先脱敏</strong>：用 <code>******</code> 或占位符替换后再发送</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-red">禁止</span>核心业务逻辑泄露</div>
+                <ul class="checklist">
+                    <li>❌ <strong>禁止全量上传</strong>：公司核心商业逻辑（定价算法、风控规则）到公有云 AI</li>
+                    <li>✅ <strong>仅上传抽象代码</strong>：通用技术逻辑、经过抽象的伪代码</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-red">禁止</span>开源协议污染</div>
+                <ul class="checklist">
+                    <li>❌ <strong>不审查直接用</strong>：AI 生成的复杂算法可能来自 GPL 等传染性协议</li>
+                    <li>✅ <strong>必须复核</strong>：使用代码扫描工具或人工审查开源协议风险</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 中：核心理念（人机协同） -->
+        <div class="block block-blue">
+            <div class="block-title">💻 2. 核心理念（责任归属）</div>
+            <div class="block-tagline">AI 是副驾驶，你是主驾驶，代码最终由你负责</div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-blue">原则 1</span>你是代码的主人</div>
+                <div class="mini-note">
+                    ❌ <strong>错误心态</strong>："这是 AI 写的，bug 不怪我"<br />
+                    ✅ <strong>正确心态</strong>：AI 只是辅助工具，提交的代码必须由你完全理解并负责<br />
+                    💡 <strong>行动</strong>：任何 AI 引入的 Bug 都是你的 Bug，必须人工 Review 后再提交
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-blue">原则 2</span>保持批判性思维</div>
+                <div class="mini-note">
+                    ❌ <strong>盲目信任</strong>：不要盲目信任首次生成的代码<br />
+                    ✅ <strong>适度怀疑</strong>：AI 可能产生幻觉（最新日期、特定库版本、边界条件）<br />
+                    💡 <strong>行动</strong>：必须进行人工 Review，特别是涉及安全、性能、边界的代码
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-blue">原则 3</span>粒度控制</div>
+                <div class="mini-note">
+                    ❌ <strong>避免</strong>：一次性让 AI 生成整个模块或超长文件<br />
+                    ✅ <strong>推荐</strong>：将大需求拆解为接口定义、核心逻辑、单元测试三步走<br />
+                    💡 <strong>效果</strong>：保持对代码的掌控力，便于 Review 和调试
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-blue">原则 4</span>测试驱动</div>
+                <div class="mini-note">
+                    ✅ <strong>强制要求</strong>：生成代码必生成对应的单元测试<br />
+                    💡 <strong>效果</strong>：通过测试用例反向验证 AI 生成的业务逻辑是否正确
+                </div>
+            </div>
+        </div>
+
+        <!-- 右：快速上手（3 步启动） -->
+        <div class="block block-green">
+            <div class="block-title">🚀 3. 快速上手（3 步启动）</div>
+            <div class="block-tagline">新人必读：从零开始使用 AI 辅助编程的最小化路径</div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-green">Step 1</span>环境准备（10分钟）</div>
+                <ul class="checklist">
+                    <li>✅ 安装 AI 工具：通义灵码 / GitHub Copilot / Cursor（选其一）</li>
+                    <li>✅ 配置企业知识库：登录企业账号，确认部门规范已同步</li>
+                    <li>✅ 学习快捷键：<code>Ctrl+I</code> 唤起对话，<code>Tab</code> 接受建议</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-green">Step 2</span>试跑场景（30分钟）</div>
+                <div class="mini-note">
+                    <strong>推荐新人第一个任务</strong>：生成单元测试（容错率高，易于验证）<br />
+                    示例提示词：<br />
+                    <code style="background: white; padding: 1mm; display: block; margin-top: 1mm;">
+                    根据公司单测规范，为以下方法生成单元测试：<br />
+                    [粘贴方法代码]<br />
+                    要求：覆盖正常场景、边界条件、异常情况
+                    </code>
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title"><span class="badge badge-green">Step 3</span>逐步扩展（1-2周）</div>
+                <ul class="checklist">
+                    <li>Week 1：使用 AI 生成样板代码（CRUD、接口定义）</li>
+                    <li>Week 2：使用 AI 辅助代码重构、生成文档注释</li>
+                    <li>持续：收藏好用的提示词模板，沉淀到个人知识库</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二层：沟通技巧 + 常见问题 -->
+    <div class="canvas-grid-wide">
+        <!-- 左：如何与 AI 高效沟通 -->
+        <div class="block">
+            <div class="block-title">💬 4. 如何与 AI 高效沟通（提示词工程）</div>
+            <div class="block-tagline">好的提示词 = 清晰的上下文 + 明确的约束 + 预期的输出格式</div>
+
+            <div class="section-row">
+                <div class="section-row-title">4.1 提示词模板结构（4 要素）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 15%;">要素</th>
+                        <th style="width: 45%;">说明</th>
+                        <th style="width: 40%;">示例</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>1. 角色定位</strong></td>
+                        <td>告诉 AI 扮演什么角色（可选但推荐）</td>
+                        <td>"你是本公司的后端工程师"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. 背景上下文</strong></td>
+                        <td>提供技术栈、依赖库、数据结构定义</td>
+                        <td>"项目使用 Spring Boot 2.7 + MyBatis-Plus"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. 任务目标</strong></td>
+                        <td>明确要做什么（核心需求）</td>
+                        <td>"生成用户注册接口的 Controller 层代码"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. 约束条件</strong></td>
+                        <td>必须遵守的规范、禁止项、输出格式</td>
+                        <td>"必须使用公司的 Result 包装器，禁止硬编码错误码"</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">4.2 反例与正例对比（学会提问的艺术）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 50%;">❌ 模糊提示词（低效）</th>
+                        <th style="width: 50%;">✅ 清晰提示词（高效）</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>"帮我写个登录"</td>
+                        <td>"作为本公司后端工程师，使用 Spring Security + JWT，生成用户登录接口，入参包含 username/password，返回 JWT Token，需集成公司统一鉴权中心"</td>
+                    </tr>
+                    <tr>
+                        <td>"这段代码有什么问题"</td>
+                        <td>"请作为代码审查专家，按公司 Java 规范审查此代码，重点检查：1. 是否存在 NullPointerException 风险；2. 事务边界是否合理；3. 变量命名是否符合规范"</td>
+                    </tr>
+                    <tr>
+                        <td>"优化性能"</td>
+                        <td>"此方法在高并发场景下响应慢，请分析时间复杂度，找出 N+1 查询问题，并给出使用 MyBatis 批量查询的优化方案"</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">4.3 高频场景提示词速查（收藏此表）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 20%;">场景</th>
+                        <th style="width: 80%;">提示词模板</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>生成单测</td>
+                        <td>根据公司单测规范，为以下代码生成单元测试，覆盖正常/边界/异常场景：[粘贴代码]</td>
+                    </tr>
+                    <tr>
+                        <td>代码评审</td>
+                        <td>作为 Tech Lead，按公司评审 Checklist 审查此代码，关注并发安全、事务粒度、规范合规</td>
+                    </tr>
+                    <tr>
+                        <td>遗留代码理解</td>
+                        <td>用 Mermaid 流程图画出此代码的核心执行路径，并解释业务逻辑，指出潜在风险</td>
+                    </tr>
+                    <tr>
+                        <td>报错排查</td>
+                        <td>我的程序报错，环境是 [技术栈]，堆栈信息：[粘贴]。请分析直接原因、关联推测、给出解决方案</td>
+                    </tr>
+                    <tr>
+                        <td>重构建议</td>
+                        <td>此代码可维护性差，请在不破坏逻辑的前提下，用 [设计模式/新语法] 重构，并解释改进点</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 右：常见问题与解决方案 -->
+        <div class="block block-yellow">
+            <div class="block-title">⚠️ 5. 常见问题与解决方案（避坑指南）</div>
+            <div class="block-tagline">95% 的新人会踩的坑，提前规避可节省 80% 的调试时间</div>
+
+            <div class="section-row">
+                <div class="section-row-title">❓ 问题 1：AI 生成的代码跑不通</div>
+                <div class="mini-note">
+                    <strong>症状</strong>：编译报错、运行时异常、API 不存在<br />
+                    <strong>根因</strong>：<br />
+                    · AI 对项目依赖版本不了解（如用了 Spring Boot 3 语法但项目是 2.x）<br />
+                    · AI 产生幻觉，编造了不存在的 API<br />
+                    <strong>解决方案</strong>：<br />
+                    ✅ <strong>提示词中明确依赖版本</strong>："使用 MyBatis-Plus 3.5.3.1 版本"<br />
+                    ✅ <strong>优先使用项目已有依赖</strong>：先查看 <code>pom.xml</code> 再提问<br />
+                    ✅ <strong>分批生成</strong>：先生成接口定义，验证通过后再生成实现
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">❓ 问题 2：生成的代码风格不符合团队规范</div>
+                <div class="mini-note">
+                    <strong>症状</strong>：变量命名混乱、缺少注释、不符合 Lint 规则<br />
+                    <strong>解决方案</strong>：<br />
+                    ✅ <strong>在提示词中引用规范</strong>："按阿里巴巴 Java 开发手册生成代码"<br />
+                    ✅ <strong>配置 System Prompt</strong>：将团队规范写入 <code>.cursorrules</code> 或通义灵码企业知识库<br />
+                    ✅ <strong>后置重构</strong>：生成后手动调整，或让 AI 二次优化："请按 Google Java Style 格式化"
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">❓ 问题 3：AI 理解错我的需求，生成的代码偏离目标</div>
+                <div class="mini-note">
+                    <strong>症状</strong>：生成了错误的业务逻辑、实现方式不符合预期<br />
+                    <strong>解决方案</strong>：<br />
+                    ✅ <strong>提供具体示例</strong>：给出输入输出示例、伪代码<br />
+                    ✅ <strong>分步引导</strong>：先让 AI 描述理解的需求，确认无误后再生成代码<br />
+                    ✅ <strong>追加约束</strong>："不要使用递归，用循环实现"
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">❓ 问题 4：每次生成的代码都不一样（不稳定）</div>
+                <div class="mini-note">
+                    <strong>症状</strong>：多次生成结果不一致，难以复现<br />
+                    <strong>解决方案</strong>：<br />
+                    ✅ <strong>强调过程逻辑</strong>：要求 AI 先输出处理逻辑和推导过程<br />
+                    ✅ <strong>固化好的版本</strong>：生成满意的代码后，将提示词和结果保存到知识库<br />
+                    ✅ <strong>使用确定性约束</strong>："按此伪代码严格翻译为 Java"
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">❓ 问题 5：AI 生成了过度设计的代码（代码膨胀）</div>
+                <div class="mini-note">
+                    <strong>症状</strong>：引入不必要的抽象层、工厂模式、过多接口<br />
+                    <strong>解决方案</strong>：<br />
+                    ✅ <strong>明确 KISS 原则</strong>："用最简单的方式实现，避免过度设计"<br />
+                    ✅ <strong>Review 阶段删减</strong>：评审时删除不必要的抽象<br />
+                    ✅ <strong>设置复杂度上限</strong>："实现控制在 50 行以内"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三层：持续成长 + 自查清单 -->
+    <div class="canvas-grid-wide">
+        <!-- 左：如何持续成长 -->
+        <div class="block">
+            <div class="block-title">📈 6. 如何持续成长（从新手到专家）</div>
+            <div class="block-tagline">AI Coding 也有能力曲线，持续实践才能提升效能</div>
+
+            <div class="section-row">
+                <div class="section-row-title">6.1 成长路径（L1 → L4）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 12%;">级别</th>
+                        <th style="width: 38%;">能力特征</th>
+                        <th style="width: 25%;">典型任务</th>
+                        <th style="width: 25%;">提升建议</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>L1 初级</strong></td>
+                        <td>能使用 AI 完成简单任务，需要频繁调试</td>
+                        <td>生成单测、CRUD 代码、代码格式化</td>
+                        <td>多练习，收藏提示词模板</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L2 中级</strong></td>
+                        <td>能独立设计提示词，解决复杂问题</td>
+                        <td>接口设计、重构、性能优化、bug 排查</td>
+                        <td>学习提示词工程，沉淀场景库</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L3 高级</strong></td>
+                        <td>能优化团队规范，培训他人，输出最佳实践</td>
+                        <td>制定团队 Prompt 库、Code Review、架构设计</td>
+                        <td>对外分享，参与公司规范建设</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L4 专家</strong></td>
+                        <td>行业影响力，对外输出，技术创新</td>
+                        <td>制定企业级规范、技术布道、开源贡献</td>
+                        <td>撰写白皮书、行业演讲</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">6.2 刻意练习（每周任务清单）</div>
+                <ul class="checklist">
+                    <li>✅ <strong>Week 1-2</strong>：每天至少用 AI 完成 1 个任务（单测、注释、格式化）</li>
+                    <li>✅ <strong>Week 3-4</strong>：尝试让 AI 辅助重构 1 个遗留代码模块</li>
+                    <li>✅ <strong>Month 2</strong>：沉淀 10 个好用的提示词模板，分享到团队知识库</li>
+                    <li>✅ <strong>Month 3</strong>：参与 1 次团队 AI Coding 经验分享会</li>
+                    <li>✅ <strong>Quarter</strong>：对比 AI 辅助前后的效率提升数据（开发周期、Bug 率）</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">6.3 知识沉淀（个人资产化）</div>
+                <div class="mini-note">
+                    <strong>建立个人 Prompt 库</strong>（推荐工具：Notion / 飞书文档 / GitHub Gist）<br />
+                    <strong>分类管理</strong>：<br />
+                    · 按场景：代码生成 / 代码评审 / 重构 / 调试 / 文档<br />
+                    · 按技术栈：Java / Python / JavaScript / SQL<br />
+                    · 按质量：⭐⭐⭐ 高频好用 / ⭐⭐ 偶尔使用 / ⭐ 存档备用<br />
+                    <strong>持续优化</strong>：<br />
+                    · 每次使用后记录效果（好用/一般/不好用）<br />
+                    · 定期回顾，淘汰低效模板，精简高效模板
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">6.4 避免倦怠期（如何坚持）</div>
+                <div class="mini-note">
+                    <strong>症状</strong>：初期热情高涨，1-2 个月后逐渐回到传统写法<br />
+                    <strong>应对策略</strong>：<br />
+                    ✅ <strong>设置小目标</strong>：每周至少用 AI 完成 3 个任务（具体可量化）<br />
+                    ✅ <strong>寻找成就感</strong>：记录效率提升数据，可视化成长曲线<br />
+                    ✅ <strong>团队互助</strong>：加入公司 AI Coding 兴趣小组，互相激励<br />
+                    ✅ <strong>奖励机制</strong>：达成里程碑时奖励自己（如：连续 30 天使用 → 买心仪设备）<br />
+                    ✅ <strong>正视阵痛</strong>：初期可能效率下降（J 型曲线），给自己 1-2 周缓冲期
+                </div>
+            </div>
+        </div>
+
+        <!-- 右：提交前自查清单 -->
+        <div class="block block-green">
+            <div class="block-title">✅ 7. 代码提交前自查清单（质量保障）</div>
+            <div class="block-tagline">每次使用 AI 生成代码后，必须完成以下检查项才能提交</div>
+
+            <div class="section-row">
+                <div class="section-row-title">🔍 Phase 1：功能正确性（5分钟）</div>
+                <ul class="checklist">
+                    <li>□ <strong>本地运行通过</strong>：代码编译成功，单元测试通过</li>
+                    <li>□ <strong>逻辑验证</strong>：手动测试核心路径，确认业务逻辑正确</li>
+                    <li>□ <strong>边界测试</strong>：测试空值、极大值、并发等边界情况</li>
+                    <li>□ <strong>幂等性检查</strong>：重复请求是否安全（特别是 POST/PUT 接口）</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">🔒 Phase 2：安全合规性（3分钟）</div>
+                <ul class="checklist">
+                    <li>□ <strong>敏感信息</strong>：代码中无硬编码密码、AK/SK</li>
+                    <li>□ <strong>SQL 注入</strong>：使用参数化查询，未拼接 SQL</li>
+                    <li>□ <strong>XSS 防护</strong>：前端输出已转义，后端校验输入</li>
+                    <li>□ <strong>权限校验</strong>：关键操作已集成鉴权逻辑</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">⚡ Phase 3：性能与稳定性（3分钟）</div>
+                <ul class="checklist">
+                    <li>□ <strong>时间复杂度</strong>：无明显的 O(n²) 或更高复杂度循环</li>
+                    <li>□ <strong>N+1 查询</strong>：数据库查询已优化（批量查询/JOIN）</li>
+                    <li>□ <strong>资源释放</strong>：I/O 流、数据库连接已关闭（try-with-resources）</li>
+                    <li>□ <strong>并发安全</strong>：共享变量已加锁或使用线程安全类</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">📐 Phase 4：规范与可维护性（3分钟）</div>
+                <ul class="checklist">
+                    <li>□ <strong>命名规范</strong>：变量/方法命名清晰，符合团队规范</li>
+                    <li>□ <strong>注释完整</strong>：关键逻辑有注释，复杂算法有说明</li>
+                    <li>□ <strong>魔术数字</strong>：硬编码的数字已提取为常量</li>
+                    <li>□ <strong>代码长度</strong>：单个方法不超过 50 行（复杂逻辑已拆分）</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">🧪 Phase 5：测试覆盖（2分钟）</div>
+                <ul class="checklist">
+                    <li>□ <strong>单元测试</strong>：核心方法已编写单元测试</li>
+                    <li>□ <strong>覆盖率</strong>：测试覆盖率 ≥ 80%（公司标准）</li>
+                    <li>□ <strong>异常场景</strong>：测试用例覆盖异常分支</li>
+                </ul>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">💡 提交前最后确认</div>
+                <div class="mini-note" style="background: white; padding: 2mm; border-left: 3px solid #10b981;">
+                    <strong>扪心自问</strong>：如果这段代码出了 Bug，我能在 5 分钟内定位问题吗？<br />
+                    如果答案是"不确定"，请继续 Review；如果是"可以"，放心提交！
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部注释 -->
+    <div class="footer-row">
+        <div>本画布适用于所有研发人员，建议打印后贴在工位，随时查阅核心原则与自查清单。</div>
+        <div>版本：v1.0 | 最后更新：2026-01-02 | 维护团队：AI Coding Team</div>
+    </div>
+</div>
+</body>
+</html>

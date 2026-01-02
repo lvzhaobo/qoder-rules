@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Coding 企业级指标画布 (42 指标全景)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        /* 打印设置：A3 横向，白色背景 */
+        @page {
+            size: A3 landscape;
+            margin: 10mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI",
+                "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+            color: #111827;
+        }
+
+        body {
+            line-height: 1.5;
+            font-size: 11px;
+        }
+
+        .canvas {
+            width: 100%;
+            padding: 6mm;
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+            background: #ffffff;
+        }
+
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #111827;
+            padding-bottom: 3mm;
+        }
+
+        .canvas-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1mm;
+        }
+
+        .canvas-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .canvas-subtitle {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .canvas-tag {
+            font-size: 9px;
+            color: #374151;
+            padding: 1mm 3mm;
+            border-radius: 3mm;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 3mm;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 3mm;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 3mm;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 3mm;
+        }
+
+        /* 模块左右布局 */
+        .module-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 4mm;
+            align-items: start;
+        }
+
+        .module-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+        }
+
+        /* Block Styles */
+        .block {
+            border: 1px solid #e5e7eb;
+            border-radius: 2mm;
+            padding: 3mm;
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+            background: #ffffff;
+        }
+
+        .block-header {
+            border: 2px solid #111827;
+            background: #f9fafb;
+            padding: 1.5mm 3mm;
+            font-weight: 700;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+        }
+
+        .block-title {
+            font-size: 11px;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5mm;
+            margin-bottom: 1mm;
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+        }
+
+        .metric-id {
+            background-color: #1f6feb;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .metric-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 2mm;
+            padding: 2mm;
+            background: #fafbfc;
+        }
+
+        .metric-label {
+            font-size: 9px;
+            color: #6b7280;
+            margin-bottom: 1mm;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .metric-desc {
+            font-size: 8px;
+            color: #6b7280;
+            margin-top: 1mm;
+            line-height: 1.4;
+        }
+
+        /* Table Styles */
+        .small-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+        }
+
+        .small-table th,
+        .small-table td {
+            border: 1px solid #e5e7eb;
+            padding: 1mm 1.5mm;
+            text-align: left;
+        }
+
+        .small-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        /* Chart Placeholder */
+        .chart-placeholder {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px dashed #bae6fd;
+            border-radius: 2mm;
+            padding: 3mm;
+            text-align: center;
+            color: #0369a1;
+            font-size: 9px;
+            min-height: 40mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1mm;
+        }
+
+        .chart-type {
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.5mm 2mm;
+            border-radius: 2mm;
+            font-size: 8px;
+            font-weight: 600;
+            margin-right: 1mm;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-yellow { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+        /* Info Box */
+        .info-box {
+            background: #f0f9ff;
+            border-left: 3px solid #0284c7;
+            padding: 2mm;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        .info-box strong {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 1mm;
+        }
+
+        /* Footer */
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2mm;
+            margin-top: 3mm;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .canvas { padding: 6mm; }
+            .grid-2, .grid-3, .grid-4, .grid-5 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="canvas">
+    <!-- 头部 -->
+    <div class="canvas-header">
+        <div class="canvas-title-block">
+            <div class="canvas-title">AI Coding 企业级指标画布（42 指标全景）</div>
+            <div class="canvas-subtitle">
+                涵盖使用情况、代码生成、API导出、PR活动、用户参与、数据质量、代码行分析及企业治理全维度
+            </div>
+        </div>
+        <div>
+            <div class="canvas-tag">A3 画布 · 白底简约 · 适合打印评审</div>
+        </div>
+    </div>
+
+    <!-- 第一层：核心 KPI 与使用情况 -->
+    <div class="module-row">
+        <!-- 左：核心 KPI 概览 -->
+        <div class="module-column">
+            <div class="block-header">
+                📊 核心 KPI 概览（企业级决策指标）
+            </div>
+            <div class="grid-4">
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#1</span> 活跃用户总数</div>
+                    <div class="metric-value">845 人</div>
+                    <div class="metric-desc"><strong>定义：</strong>本月至少进行过 1 次交互的授权用户数。<strong>作用：</strong>衡量整体采用规模。</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#2</span> 代码采纳率</div>
+                    <div class="metric-value">31.8%</div>
+                    <div class="metric-desc"><strong>计算：</strong>code_acceptance_count ÷ code_generation_count。<strong>作用：</strong>信任度与质量指标。</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#3</span> Agent 采用率</div>
+                    <div class="metric-value">42.5%</div>
+                    <div class="metric-desc"><strong>定义：</strong>活跃用户中使用过 Agent 功能的占比。<strong>作用：</strong>高级功能渗透率。</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#4</span> 代码变更</div>
+                    <div class="metric-value">520K 行</div>
+                    <div class="metric-desc"><strong>定义：</strong>添加+删除总量。<strong>作用：</strong>量化 AI 对代码库的直接影响。</div>
+                </div>
+            </div>
+            <div class="grid-4">
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#5</span> ROI</div>
+                    <div class="metric-value">3.8x</div>
+                    <div class="metric-desc"><strong>计算：</strong>节省成本 ÷ 投入成本。<strong>作用：</strong>财务价值证明。</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#6</span> License 利用率</div>
+                    <div class="metric-value">88.5%</div>
+                    <div class="metric-desc"><strong>计算：</strong>WAU ÷ 购买席位数。<strong>作用：</strong>成本效率（>60% 健康）。</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#7</span> 安全拦截率</div>
+                    <div class="metric-value">0.12%</div>
+                    <div class="metric-desc"><strong>定义：</strong>触发安全策略拦截的比例。<strong>作用：</strong>合规风险监控。</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label"><span class="metric-id">#8</span> 合规性评分</div>
+                    <div class="metric-value">96/100</div>
+                    <div class="metric-desc"><strong>定义：</strong>基于企业策略的综合评分。<strong>作用：</strong>治理健康度。</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右：使用情况看板 -->
+        <div class="module-column">
+            <div class="block-header">
+                📈 使用情况看板（Usage Dashboard - 15 指标）
+            </div>
+
+    <div class="grid-2">
+        <!-- 左侧：用户活跃度 -->
+        <div class="block">
+            <div class="block-title">用户活跃度分析 (6 指标)</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>指标 ID</th>
+                    <th>指标名称</th>
+                    <th>数值</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="metric-id">#5</span></td>
+                    <td>日活跃用户 (DAU)</td>
+                    <td><strong>487</strong></td>
+                    <td>每日至少 1 次交互的用户数</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#6</span></td>
+                    <td>周活跃用户 (WAU)</td>
+                    <td><strong>745</strong></td>
+                    <td>每周至少 1 次交互的用户数</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#7</span></td>
+                    <td>活跃用户总数 (Total Active)</td>
+                    <td><strong>845</strong></td>
+                    <td>本月活跃用户（含新增+回流）</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#1</span></td>
+                    <td>Agent 采用率</td>
+                    <td><strong>42.5%</strong></td>
+                    <td>使用过 Agent 功能的活跃用户占比</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#2</span></td>
+                    <td>人均 Chat 请求数</td>
+                    <td><strong>18.2 次</strong></td>
+                    <td>每位活跃用户的平均聊天请求</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#4</span></td>
+                    <td>代码采纳率</td>
+                    <td><strong>31.8%</strong></td>
+                    <td>建议被接受的百分比（信任度）</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="chart-placeholder">
+                <div class="chart-type">📊 折线图示例</div>
+                <div>DAU/WAU 趋势（过去 14 天）</div>
+                <div style="font-size: 8px; color: #6b7280;">
+                    趋势：DAU 稳定增长表明持续参与；DAU/WAU > 60% 表明高粘性
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：语言与模型使用 -->
+        <div class="block">
+            <div class="block-title">语言与模型分布 (5 指标)</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>指标 ID</th>
+                    <th>指标名称</th>
+                    <th>Top 结果</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="metric-id">#8</span></td>
+                    <td>语言使用分布</td>
+                    <td>Python 40% / TS 30%</td>
+                    <td>按文件后缀统计的语言分布</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#9</span></td>
+                    <td>每日语言活跃度</td>
+                    <td>Python 日均 85 次</td>
+                    <td>各语言每日交互频次趋势</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#10</span></td>
+                    <td>模型使用分布 (总体)</td>
+                    <td>GPT-4 65% / Claude 35%</td>
+                    <td>所有场景汇总的模型占比</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#11</span></td>
+                    <td>每日模型使用情况</td>
+                    <td>GPT-4 日均 420 次</td>
+                    <td>各模型每日调用次数趋势</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#14</span></td>
+                    <td>最常用 Chat 模型</td>
+                    <td><strong>GPT-4</strong></td>
+                    <td>聊天场景下使用最多的模型</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="chart-placeholder">
+                <div class="chart-type">🥧 饼图示例</div>
+                <div>语言使用分布（本月）</div>
+                <div style="font-size: 8px; color: #6b7280;">
+                    Python 40% | TypeScript 30% | Java 20% | Go 10%
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- 聊天模式与代码补全 -->
+            <div class="grid-2">
+                <div class="block">
+                    <div class="block-title">聊天模式分析 (2 指标)</div>
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>指标 ID</th>
+                            <th>指标名称</th>
+                            <th>数值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="metric-id">#15</span></td>
+                            <td>各 Chat 模式请求数</td>
+                            <td>Ask 5800 / Edit 2500</td>
+                            <td>Ask/Edit/Agent 三种模式的请求分布</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#12</span></td>
+                            <td>各模式模型使用情况</td>
+                            <td>Ask 偏好 GPT-4</td>
+                            <td>不同模式下的模型偏好差异</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="block">
+                    <div class="block-title">代码补全统计 (2 指标)</div>
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>指标 ID</th>
+                            <th>指标名称</th>
+                            <th>数值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="metric-id">#3</span></td>
+                            <td>建议总数</td>
+                            <td><strong>154,000</strong></td>
+                            <td>补全建议总数</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#3</span></td>
+                            <td>接受总数</td>
+                            <td><strong>48,972</strong></td>
+                            <td>采纳数（31.8%）</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#13</span></td>
+                            <td>语言模型偏好</td>
+                            <td>Python → GPT-4</td>
+                            <td>模型选择偏好</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二层：代码生成与 API 导出 -->
+    <div class="module-row">
+        <!-- 左：代码生成看板 -->
+        <div class="module-column">
+            <div class="block-header">
+                💻 代码生成看板（Code Generation - 10 指标）
+            </div>
+
+    <div class="grid-3">
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#1</span> AI 辅助代码变更行数</div>
+            <div class="metric-value">520,000 行</div>
+            <div class="metric-desc">添加 + 删除的总行数，衡量 AI 对代码库的直接影响</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#2</span> Agent 贡献率</div>
+            <div class="metric-value">28.5%</div>
+            <div class="metric-desc">Agent 发起的变更占总变更的比例</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#3</span> Agent 平均删除行数</div>
+            <div class="metric-value">145 行/人</div>
+            <div class="metric-desc">每位使用 Agent 的用户平均删除的代码行数</div>
+        </div>
+    </div>
+
+            <div class="grid-2">
+                <div class="block">
+                    <div class="block-title">代码变更来源分析 (4 指标)</div>
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>指标 ID</th>
+                            <th>指标名称</th>
+                            <th>数值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="metric-id">#4</span></td>
+                            <td>每日变更</td>
+                            <td>+2.5K / -800 行/天</td>
+                            <td>每日新增与删除</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#5</span></td>
+                            <td>用户发起</td>
+                            <td><strong>350,000 行</strong></td>
+                            <td>手动采纳/编辑</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#6</span></td>
+                            <td>Agent 发起</td>
+                            <td><strong>170,000 行</strong></td>
+                            <td>自动化操作</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#4</span></td>
+                            <td>AI 影响占比</td>
+                            <td><strong>45.2%</strong></td>
+                            <td>AI 代码占比</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="block">
+                    <div class="block-title">语言与模型维度 (3 指标)</div>
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>指标 ID</th>
+                            <th>维度</th>
+                            <th>示例数据</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="metric-id">#7,8</span></td>
+                            <td>各模型代码变更</td>
+                            <td>GPT-4: 用户 8K / Agent 3.5K</td>
+                        </tr>
+                        <tr>
+                            <td><span class="metric-id">#9,10</span></td>
+                            <td>各语言代码变更</td>
+                            <td>Python: 用户 5K / Agent 2K</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右：API 与导出字段 -->
+        <div class="module-column">
+            <div class="block-header">
+                🔌 API 与导出字段（API & Export - 13 指标）
+            </div>
+
+    <div class="grid-5">
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#1</span> Agent 编辑数</div>
+            <div class="metric-value">12,500</div>
+            <div class="metric-desc">Agent 执行的编辑操作总数</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#2</span> 用户主动交互数</div>
+            <div class="metric-value">24,500</div>
+            <div class="metric-desc">用户显式发起的 Prompt 数量</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#3</span> 代码生成活动数</div>
+            <div class="metric-value">89,000</div>
+            <div class="metric-desc">生成代码的事件总量</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#4</span> 代码采纳活动数</div>
+            <div class="metric-value">32,000</div>
+            <div class="metric-desc">显式采纳操作次数</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#-</span> 采纳率</div>
+            <div class="metric-value">35.96%</div>
+            <div class="metric-desc">32K ÷ 89K</div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="block">
+            <div class="block-title">代码行详细指标 (4 指标)</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>指标 ID</th>
+                    <th>指标名称</th>
+                    <th>数值</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="metric-id">#5</span></td>
+                    <td>建议添加行数 (Suggested Add)</td>
+                    <td><strong>600,000</strong></td>
+                    <td>AI Coding 建议添加的代码行数</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#6</span></td>
+                    <td>建议删除行数 (Suggested Del)</td>
+                    <td><strong>80,000</strong></td>
+                    <td>AI Coding 建议删除的代码行数</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#7</span></td>
+                    <td>实际添加行数 (Added Sum)</td>
+                    <td><strong>480,000</strong></td>
+                    <td>用户实际采纳并添加到文件的代码行数</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#8</span></td>
+                    <td>实际删除行数 (Deleted Sum)</td>
+                    <td><strong>40,000</strong></td>
+                    <td>通过 AI Coding 建议删除的实际代码行数</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>漏斗分析：</strong>建议 → 实际的转化率。建议 60 万行，实际采纳 48 万行，转化率 80%。
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="block-title">IDE 与功能分布 (4 指标)</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>指标 ID</th>
+                    <th>维度</th>
+                    <th>Top 结果</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="metric-id">#9</span></td>
+                    <td>按 IDE 分布 (Totals by IDE)</td>
+                    <td>VS Code 59% / IntelliJ 24%</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#10</span></td>
+                    <td>按功能分布 (Totals by Feature)</td>
+                    <td>代码补全 67% / 聊天 20%</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#11</span></td>
+                    <td>语言与功能交叉分析</td>
+                    <td>Python 偏好补全，TS 偏好聊天</td>
+                </tr>
+                <tr>
+                    <td><span class="metric-id">#12</span></td>
+                    <td>模型与功能交叉分析</td>
+                    <td>GPT-4 聊天占优，Claude 行内强</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="chart-placeholder">
+                <div class="chart-type">🥧 饼图示例</div>
+                <div>IDE 使用分布</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 客户端版本表 -->
+    <div class="block">
+        <div class="block-title"><span class="metric-id">#13</span> 客户端版本详情 (Last Known Version)</div>
+        <table class="small-table">
+            <thead>
+            <tr>
+                <th>用户登录名</th>
+                <th>最后使用的 IDE</th>
+                <th>IDE 版本</th>
+                <th>插件版本</th>
+                <th>最后活跃</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>dev_sarah</td>
+                <td>VS Code</td>
+                <td>1.85.1</td>
+                <td>v1.144.0</td>
+                <td>2h ago</td>
+            </tr>
+            <tr>
+                <td>eng_mike</td>
+                <td>JetBrains IntelliJ</td>
+                <td>2023.3.2</td>
+                <td>1.4.15</td>
+                <td>5h ago</td>
+            </tr>
+            <tr>
+                <td>lead_jess</td>
+                <td>Visual Studio</td>
+                <td>17.9.0</td>
+                <td>1.144.0</td>
+                <td>1d ago</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="metric-desc" style="margin-top: 2mm;">
+            <strong>作用：</strong>识别需要升级的客户端、排查兼容性问题。旧版本可能缺失新功能或存在 Bug。
+        </div>
+    </div>
+
+    <!-- 第五层：PR 活动 (4 指标) -->
+    <div class="block-header">
+        🔀 PR 活动分析（Pull Request Activity - 4 指标）
+    </div>
+
+    <div class="grid-4">
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#1</span> PR 创建总数</div>
+            <div class="metric-value">340</div>
+            <div class="metric-desc">本月创建的 PR 总数</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#2</span> PR 审查总数</div>
+            <div class="metric-value">310</div>
+            <div class="metric-desc">本月审查的 PR 总数</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#3</span> AI Coding 创建的 PR</div>
+            <div class="metric-value">45 (13.2%)</div>
+            <div class="metric-desc">由 AI Coding 辅助创建的 PR 数量及占比</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#4</span> AI Coding 审查的 PR</div>
+            <div class="metric-value">180 (58.1%)</div>
+            <div class="metric-desc">由 AI Coding 辅助审查的 PR 数量及占比</div>
+        </div>
+    </div>
+
+            <div class="info-box">
+                <strong>洞察：</strong>AI Coding 审查占比 58% 表明 Code Review 助手被广泛采用，可减轻人工审查负担。创建占比 13% 较低，可推广 Agent 自动 PR 功能。
+            </div>
+        </div>
+
+        <!-- 右：用户参与度深度分析 -->
+        <div class="module-column">
+            <div class="block-header">
+                🎯 用户参与度深度分析（Engagement Deep Dive）
+            </div>
+
+    <div class="grid-3">
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#1</span> DAU / WAU 比率</div>
+            <div class="metric-value">57.7%</div>
+            <div class="metric-desc"><strong>计算：</strong>487 ÷ 745。<strong>作用：</strong>用户粘性指标（>60% 为健康）。</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#3</span> 代码补全接受率</div>
+            <div class="metric-value">31.8% <span class="badge badge-green">+2.1%</span></div>
+            <div class="metric-desc">信任度指标，持续上升表明质量提升</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#5</span> Agent 采用深度</div>
+            <div class="metric-value">42.5%</div>
+            <div class="metric-desc">高级功能渗透率（行业平均 ~30%）</div>
+        </div>
+    </div>
+
+            <div class="grid-2">
+                <div class="block">
+                    <div class="block-title"><span class="metric-id">#4</span> Chat 模式分布</div>
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>模式</th>
+                            <th>请求数</th>
+                            <th>占比</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Ask</td>
+                            <td>5,800</td>
+                            <td>60.4%</td>
+                            <td>快速咨询</td>
+                        </tr>
+                        <tr>
+                            <td>Edit</td>
+                            <td>2,500</td>
+                            <td>26.0%</td>
+                            <td>修改重构</td>
+                        </tr>
+                        <tr>
+                            <td>Agent</td>
+                            <td>1,200</td>
+                            <td>12.5%</td>
+                            <td>自动化任务</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="block">
+                    <div class="block-title"><span class="metric-id">#7</span> 模型偏好</div>
+                    <table class="small-table">
+                        <thead>
+                        <tr>
+                            <th>模式</th>
+                            <th>GPT-4</th>
+                            <th>Claude 3.5</th>
+                            <th>趋势</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Ask</td>
+                            <td>77.6%</td>
+                            <td>22.4%</td>
+                            <td>GPT-4 主导</td>
+                        </tr>
+                        <tr>
+                            <td>Edit</td>
+                            <td>40.0%</td>
+                            <td>60.0%</td>
+                            <td>Claude 优势</td>
+                        </tr>
+                        <tr>
+                            <td>Agent</td>
+                            <td>66.7%</td>
+                            <td>33.3%</td>
+                            <td>GPT-4 为主</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第四层：数据质量与代码行分析 -->
+    <div class="module-row">
+        <!-- 左：数据质量与指标定义 -->
+        <div class="module-column">
+            <div class="block-header">
+                📋 数据质量与指标定义（Data Quality）
+            </div>
+
+    <div class="grid-3">
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#5</span> 未知语言事件</div>
+            <div class="metric-value">120</div>
+            <div class="metric-desc">无法识别文件类型的事件数（0.8%）</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#5</span> 未知功能事件</div>
+            <div class="metric-value">45</div>
+            <div class="metric-desc">旧版客户端泛型事件（0.3%）</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">#1</span> 数据完整度</div>
+            <div class="metric-value">98.9%</div>
+            <div class="metric-desc">有效分类事件占比（健康）</div>
+        </div>
+    </div>
+
+            <div class="block">
+                <div class="block-title">关键指标定义速查表</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 25%;">指标名称</th>
+                        <th style="width: 45%;">定义</th>
+                        <th style="width: 30%;">计算公式</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>活跃用户</strong></td>
+                        <td>每日/周/月与 AI Coding 交互的用户</td>
+                        <td>user_initiated_interaction > 0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>接受率</strong></td>
+                        <td>代码建议被采纳的比例</td>
+                        <td>acceptance ÷ generation (>25%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agent 采用</strong></td>
+                        <td>活跃用户中使用过 Agent 的百分比</td>
+                        <td>agent_users ÷ active_users (>30%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>License 利用率</strong></td>
+                        <td>活跃席位占购买席位的比例</td>
+                        <td>WAU ÷ purchased_seats (>60%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ROI</strong></td>
+                        <td>节省成本相对于投入成本的倍数</td>
+                        <td>cost_savings ÷ investment (>3x)</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 右：代码行深度透视 -->
+        <div class="module-column">
+            <div class="block-header">
+                📝 代码行 (LoC) 深度透视（Lines of Code）
+            </div>
+
+    <div class="grid-2">
+        <div class="block">
+            <div class="block-title">代码建议与采纳漏斗</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>阶段</th>
+                    <th>指标</th>
+                    <th>数值</th>
+                    <th>转化率</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="badge badge-blue">建议</span></td>
+                    <td>建议添加 (loc_suggested_to_add_sum)</td>
+                    <td><strong>600,000</strong></td>
+                    <td>100%</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-green">采纳</span></td>
+                    <td>实际添加 (loc_added_sum)</td>
+                    <td><strong>480,000</strong></td>
+                    <td><strong>80%</strong></td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-yellow">删除</span></td>
+                    <td>建议删除 (loc_suggested_to_delete_sum)</td>
+                    <td>80,000</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-red">实际删除</span></td>
+                    <td>实际删除 (loc_deleted_sum)</td>
+                    <td>40,000</td>
+                    <td><strong>50%</strong></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="chart-placeholder">
+                <div class="chart-type">🔻 漏斗图示例</div>
+                <div>建议 → 采纳 转化漏斗</div>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="block-title">Agent 编辑详情</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>指标</th>
+                    <th>数值</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Agent 编辑数</td>
+                    <td><strong>12,500</strong></td>
+                    <td>Agent 执行的编辑操作总数</td>
+                </tr>
+                <tr>
+                    <td>Agent 添加行数</td>
+                    <td><strong>29,250</strong></td>
+                    <td>Agent 直接添加到文件的代码行数</td>
+                </tr>
+                <tr>
+                    <td>Agent 删除行数</td>
+                    <td><strong>11,838</strong></td>
+                    <td>Agent 直接删除的代码行数</td>
+                </tr>
+                <tr>
+                    <td>平均每次编辑行数</td>
+                    <td><strong>3.3 行</strong></td>
+                    <td>41,088 ÷ 12,500</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>⚠️ Agent 模式差异：</strong>Agent 不遵循传统的"建议然后接受"流程，而是直接规划和执行多步骤任务。因此 code_acceptance_activity_count 在某些 Agent 场景下可能为 0。
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    <!-- 第五层：企业级治理 -->
+    <div class="block-header">
+        🏢 企业级 ROI 与合规治理（Enterprise Governance）
+    </div>
+
+    <div class="grid-4">
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">ROI</span> 投资回报率</div>
+            <div class="metric-value">3.8x <span class="badge badge-green">+0.4x</span></div>
+            <div class="metric-desc">每投入 1 元产生 3.8 元价值（行业领先）</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">Lic</span> License 利用率</div>
+            <div class="metric-value">88.5%</div>
+            <div class="metric-desc">WAU 745 / 购买席位 842（健康）</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">Sec</span> 安全拦截率</div>
+            <div class="metric-value">0.12%</div>
+            <div class="metric-desc">143 拦截 / 12 万次请求（低风险）</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label"><span class="metric-id">Com</span> 合规性评分</div>
+            <div class="metric-value">96/100</div>
+            <div class="metric-desc">基于企业策略的综合评分（优秀）</div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="block">
+            <div class="block-title">成本效益分析</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>项目</th>
+                    <th>数值</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>本月投入成本</td>
+                    <td>$28,000</td>
+                    <td>License 费用（$19/席位 × 842 × 1.75 标准率）</td>
+                </tr>
+                <tr>
+                    <td>预估节省工时</td>
+                    <td><strong>12,500 h</strong></td>
+                    <td>基于代码生成量与平均速率估算</td>
+                </tr>
+                <tr>
+                    <td>预估节省成本</td>
+                    <td><strong>$450,000</strong></td>
+                    <td>12,500h × $36/h (行业平均人力成本)</td>
+                </tr>
+                <tr>
+                    <td>ROI 倍数</td>
+                    <td><strong>3.8x</strong></td>
+                    <td>$450K ÷ $118K（含培训与管理成本）</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="chart-placeholder">
+                <div class="chart-type">📈 折线图示例</div>
+                <div>累计成本 vs 累计节省趋势</div>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="block-title">各部门 AI Coding 活跃渗透率</div>
+            <table class="small-table">
+                <thead>
+                <tr>
+                    <th>部门</th>
+                    <th>购买席位</th>
+                    <th>活跃用户</th>
+                    <th>渗透率</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>前端团队</td>
+                    <td>120</td>
+                    <td>110</td>
+                    <td><strong>92%</strong> <span class="badge badge-green">优秀</span></td>
+                </tr>
+                <tr>
+                    <td>后端团队</td>
+                    <td>180</td>
+                    <td>158</td>
+                    <td><strong>88%</strong> <span class="badge badge-green">良好</span></td>
+                </tr>
+                <tr>
+                    <td>平台组</td>
+                    <td>80</td>
+                    <td>56</td>
+                    <td><strong>70%</strong> <span class="badge badge-yellow">中等</span></td>
+                </tr>
+                <tr>
+                    <td>数据组</td>
+                    <td>60</td>
+                    <td>27</td>
+                    <td><strong>45%</strong> <span class="badge badge-red">需改进</span></td>
+                </tr>
+                <tr>
+                    <td>移动端</td>
+                    <td>90</td>
+                    <td>59</td>
+                    <td><strong>65%</strong> <span class="badge badge-yellow">中等</span></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="chart-placeholder">
+                <div class="chart-type">📊 横向柱状图示例</div>
+                <div>各部门活跃渗透率对比</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block">
+        <div class="block-title">安全与合规事件分布</div>
+        <table class="small-table">
+            <thead>
+            <tr>
+                <th>事件类型</th>
+                <th>数量</th>
+                <th>占比</th>
+                <th>处理措施</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>安全代码生成</td>
+                <td>4,500</td>
+                <td>96.9%</td>
+                <td>✅ 通过安全扫描</td>
+            </tr>
+            <tr>
+                <td>公共代码匹配</td>
+                <td>120</td>
+                <td>2.6%</td>
+                <td>⚠️ 提示用户审查 License</td>
+            </tr>
+            <tr>
+                <td>PII 拦截</td>
+                <td>15</td>
+                <td>0.3%</td>
+                <td>🚫 阻止上传，敏感信息脱敏</td>
+            </tr>
+            <tr>
+                <td>密钥泄露拦截</td>
+                <td>8</td>
+                <td>0.2%</td>
+                <td>🚫 阻止上传，触发安全审计</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="info-box">
+            <strong>合规策略：</strong>安全拦截率 0.12% 表明用户安全意识良好。需持续监控 PII 和密钥泄露事件，定期组织安全培训。
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer-row">
+        <div>本画布覆盖 AI Coding 企业级全部 42 个核心指标，适用于 CTO、研发管理者、平台负责人进行决策与评审。</div>
+        <div>版本：v1.0 | 最后更新：2026-01-02 | 数据来源：GitHub AI Coding Metrics API</div>
+    </div>
+</div>
+</body>
+</html>

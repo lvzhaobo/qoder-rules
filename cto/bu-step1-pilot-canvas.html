@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Coding 试点画布 - BU 团队落地看板</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff; /* 白色背景 */
+            color: #222;
+        }
+        .canvas {
+            max-width: 1280px;
+            margin: 0 auto 48px auto;
+        }
+        h1, h2, h3, h4 {
+            margin: 0 0 8px 0;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 18px;
+            border-left: 4px solid #222;
+            padding-left: 8px;
+            margin-top: 24px;
+        }
+        h3 {
+            font-size: 16px;
+            margin-top: 16px;
+        }
+        p {
+            margin: 4px 0;
+        }
+        .section {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-top: 16px;
+        }
+        .section-header-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .field {
+            min-width: 200px;
+            margin: 4px 0;
+        }
+        .field-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .field-value {
+            min-height: 20px;
+            padding: 2px 4px;
+            border-bottom: 1px dashed #ccc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            vertical-align: top;
+        }
+        th {
+            background: #f7f7f7;
+            font-weight: 600;
+            text-align: left;
+        }
+        .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .role-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .role-column {
+            flex: 1 1 220px;
+            border: 1px dashed #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            min-width: 220px;
+        }
+        .role-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .role-body {
+            min-height: 80px;
+        }
+        .status-legend {
+            font-size: 12px;
+            color: #666;
+        }
+        .checkbox-cell {
+            text-align: center;
+            width: 52px;
+        }
+    </style>
+</head>
+<body>
+<div class="canvas">
+    <header>
+        <h1>AI Coding 试点画布（BU 级）</h1>
+        <p class="hint">用途：用于每个 BU 内产品、前端、后端、测试、运维小组开展 AI Coding 试点运行、记录问题并形成闭环。</p>
+    </header>
+
+    <!-- 1. 试点基本信息 -->
+    <section class="section" id="basic-info">
+        <h2>一、试点基本信息</h2>
+        <div class="section-header-row">
+            <div class="field">
+                <div class="field-label">BU / 事业部</div>
+                <div class="field-value">[示例：电商事业部]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">试点团队</div>
+                <div class="field-value">[示例：订单中台团队]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">试点周期</div>
+                <div class="field-value">[示例：2026-01-10 ~ 2026-02-10]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">负责人</div>
+                <div class="field-value">[BU 负责人 / TL]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">参与角色</div>
+                <div class="field-value">产品 / 前端 / 后端 / 测试 / 运维</div>
+            </div>
+        </div>
+        <h3>试点目标</h3>
+        <p class="hint">示例：覆盖 3 个真实需求，从 PRD 到上线全流程都引入 AI Coding，验证效率与质量提升。</p>
+        <div class="field-value" style="min-height:48px;"></div>
+    </section>
+
+    <!-- 2. AI Coding 规则清单（缩写版） -->
+    <section class="section" id="rules">
+        <h2>二、AI Coding 试点规则（简版清单）</h2>
+        <p class="hint">为避免一次性灌入过多规则，试点期只选择 5~10 条关键规则进行验证。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 210px;">规则</th>
+                <th style="width: 150px;">主要适用角色</th>
+                <th style="width: 80px;">是否纳入试点</th>
+                <th>备注 / 说明</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>所有 PRD 评审前，产品需用 AI 生成「需求澄清问题清单」并与团队对齐。</td>
+                <td>产品</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>前端/后端在编码前，需用 AI 生成「技术方案 & 接口约定草稿」，并经评审。</td>
+                <td>前端 / 后端</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>开发完成后，必须使用 AI 生成单元测试/接口测试草稿，再由人工修订。</td>
+                <td>后端 / 测试</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>每次 Bug 修复，需使用 AI 协助分析「根因 + 相似代码范围」，避免重复问题。</td>
+                <td>后端 / 测试</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>运维在排障时，优先通过 Qoder CLI 等 AI CLI 生成诊断命令与分析报告。</td>
+                <td>运维 / 后端</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>试点期间所有 AI 生成的关键产出（文档、脚本）需纳入代码库或知识库管理。</td>
+                <td>全角色</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>每周固定 30 分钟，团队使用画布做一次 AI Coding 使用情况复盘。</td>
+                <td>全角色</td>
+                <td class="checkbox-cell">□ 是 □ 否</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 3. 验收标准 -->
+    <section class="section" id="acceptance">
+        <h2>三、试点验收标准</h2>
+        <p class="hint">验收时至少从「效率、质量、覆盖度、体验」四个维度评估，需有可量化指标。注意：试点早期可能因学习成本和流程调整导致效率短暂下降，可在指标设计中预留「学习期缓冲」，例如前 2 周允许效率持平或略降，从第 3~4 周开始要求看到稳定改善。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 140px;">维度</th>
+                <th style="width: 260px;">指标 / 目标</th>
+                <th style="width: 120px;">试点前基线</th>
+                <th style="width: 120px;">试点结果</th>
+                <th style="width: 80px;">达成情况</th>
+                <th>补充说明</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>效率</td>
+                <td>需求评审 → 上线周期缩短 X%；关键文档/脚本产出时间减少。</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 达成 □ 未达成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>质量</td>
+                <td>P0/P1 线上缺陷数下降；重复性缺陷减少。</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 达成 □ 未达成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>覆盖度</td>
+                <td>至少 N 个真实需求/模块引入 AI Coding 全流程实践。</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 达成 □ 未达成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>团队体验</td>
+                <td>各角色对 AI Coding 满意度 ≥ 3.5/5，且愿意继续使用。</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 达成 □ 未达成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>规范沉淀</td>
+                <td>试点结束后，形成可复用的规范/模板 ≥ 3 份。</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 达成 □ 未达成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>学习期效应</td>
+                <td>试点前 2 周效率可接受短暂持平或略降，第 3~4 周开始要求效率不低于基线并逐步提升。</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 达成 □ 未达成</td>
+                <td>如未达成，需要分析是否为规则设计/工具选型问题，而非简单否定 AI Coding。</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 4. 各角色试点场景画布 -->
+    <section class="section" id="role-scenarios">
+        <h2>四、各角色试点场景</h2>
+        <p class="hint">为每个角色设计 1~3 个典型场景，明确如何使用 AI Coding / AI CLI，产出什么成果。</p>
+        <h3>1. 角色协同视图（建议）</h3>
+        <p class="hint">示例协同链路：产品提出需求 → 前后端设计与评审 → 开发实现与自测 → 测试验证 → 运维发布与观测，全流程都引入 AI 工具。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 120px;">阶段</th>
+                <th style="width: 140px;">主责角色</th>
+                <th style="width: 160px;">协同角色</th>
+                <th>AI Coding 相关动作（可勾选）</th>
+                <th style="width: 200px;">常见问题提示</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>需求 & 方案</td>
+                <td>产品经理</td>
+                <td>前端 / 后端 / 测试</td>
+                <td>
+                    □ 用 AI 生成澄清问题清单<br />
+                    □ 用 AI 生成用例草稿<br />
+                    □ 用 AI 帮忙拆分 Roadmap
+                </td>
+                <td>容易出现：只贴 PRD 不给上下文；AI 输出未和团队同步，导致预期不一致。</td>
+            </tr>
+            <tr>
+                <td>设计 & 评审</td>
+                <td>前端 / 后端 TL</td>
+                <td>产品 / 测试</td>
+                <td>
+                    □ 用 AI 生成接口设计草稿<br />
+                    □ 用 AI 生成时序图/架构图草稿<br />
+                    □ 用 AI 检查风险点
+                </td>
+                <td>容易出现：过度依赖 AI 给出的方案，评审走过场；缺少“最终人工拍板”。</td>
+            </tr>
+            <tr>
+                <td>开发 & 自测</td>
+                <td>前端 / 后端</td>
+                <td>测试</td>
+                <td>
+                    □ 用 AI 生成单元测试草稿<br />
+                    □ 用 AI 做代码风格与安全检查<br />
+                    □ 用 AI 生成 Mock 数据/接口
+                </td>
+                <td>容易出现：只用 AI 写代码不做理解；测试回归时发现大量边界遗漏。</td>
+            </tr>
+            <tr>
+                <td>测试 & 验证</td>
+                <td>测试工程师</td>
+                <td>前后端</td>
+                <td>
+                    □ 用 AI 生成覆盖多角色的测试场景<br />
+                    □ 用 AI 分析缺陷归类与根因模式
+                </td>
+                <td>容易出现：AI 生成用例过理想化，与真实数据/脏数据偏差较大。</td>
+            </tr>
+            <tr>
+                <td>发布 & 运维</td>
+                <td>运维工程师</td>
+                <td>后端 / 测试</td>
+                <td>
+                    □ 用 Qoder CLI 做健康检查<br />
+                    □ 用 AI 生成排障脚本和 Runbook<br />
+                    □ 用 AI 生成上线公告/变更说明草稿
+                </td>
+                <td>容易出现：运维只看命令不看解释；脚本未纳入版本管理。</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>2. 各角色详细场景</h3>
+
+        <div class="role-columns">
+            <div class="role-column">
+                <div class="role-title">产品经理（PRD / 评审）</div>
+                <div class="role-body">
+                    <p class="hint">示例：用 AI 生成需求澄清问题、用例草稿、边界场景。</p>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>场景</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="height: 72px;">[示例：拆分「价格体系优化」为可实施的子需求，并生成澄清问题清单]</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 72px;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="role-column">
+                <div class="role-title">前端工程师</div>
+                <div class="role-body">
+                    <p class="hint">示例：用 AI 生成接口 Mock、组件方案、测试用例草稿。</p>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>场景</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="height: 72px;">[示例：为价格详情页生成状态流转图和交互用例]</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 72px;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="role-column">
+                <div class="role-title">后端工程师</div>
+                <div class="role-body">
+                    <p class="hint">示例：用 AI 生成接口设计草稿、单元测试、边界条件检查。</p>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>场景</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="height: 72px;">[示例：用 Qoder CLI 分析 mall-portal 中价格计算链路并生成重构建议]</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 72px;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="role-column">
+                <div class="role-title">测试工程师</div>
+                <div class="role-body">
+                    <p class="hint">示例：用 AI 生成测试用例、接口压测脚本、缺陷聚合分析。</p>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>场景</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="height: 72px;">[示例：为「促销+优惠券」组合生成边界测试集]</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 72px;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="role-column">
+                <div class="role-title">运维工程师</div>
+                <div class="role-body">
+                    <p class="hint">示例：用 AI CLI 生成排障命令、诊断报告、运维脚本。</p>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>场景</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="height: 72px;">[示例：通过 Qoder CLI 对 mall 生产环境做一次健康检查并输出报告]</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 72px;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 问题记录区 -->
+    <section class="section" id="issues">
+        <h2>五、问题记录与闭环跟踪区</h2>
+        <p class="hint">试点过程中的所有问题（工具、流程、习惯、效果等）都记录在此，并要求给出最终闭环结果。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 90px;">发现日期</th>
+                <th style="width: 80px;">发现人</th>
+                <th style="width: 220px;">问题描述</th>
+                <th style="width: 80px;">影响程度</th>
+                <th style="width: 70px;">优先级</th>
+                <th style="width: 180px;">初步原因分析</th>
+                <th style="width: 180px;">解决方案（临时 / 终局）</th>
+                <th style="width: 90px;">责任人</th>
+                <th style="width: 100px;">目标解决时间</th>
+                <th style="width: 80px;">状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>高 / 中 / 低</td>
+                <td>P0 / P1 / P2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>打开 / 处理中 / 已解决 / 关闭</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>高 / 中 / 低</td>
+                <td>P0 / P1 / P2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>打开 / 处理中 / 已解决 / 关闭</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>高 / 中 / 低</td>
+                <td>P0 / P1 / P2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>打开 / 处理中 / 已解决 / 关闭</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="status-legend">状态建议：打开 → 处理中 → 已解决 → 关闭，并在「解决方案」中记录是否需要沉淀为规范/模板。</p>
+    </section>
+
+    <!-- 6. 改进行动列表 -->
+    <section class="section" id="actions">
+        <h2>六、改进行动列表（Action Items）</h2>
+        <p class="hint">从问题区抽取需要跨小组/跨 BU 推进的改进项，形成可跟踪的行动列表。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 260px;">行动项</th>
+                <th style="width: 120px;">归属问题 #</th>
+                <th style="width: 110px;">责任人</th>
+                <th style="width: 110px;">协同团队 / BU</th>
+                <th style="width: 110px;">截止日期</th>
+                <th style="width: 90px;">状态</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>未开始 / 进行中 / 已完成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>未开始 / 进行中 / 已完成</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>未开始 / 进行中 / 已完成</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 7. 复盘总结 -->
+    <section class="section" id="retrospective">
+        <h2>七、试点复盘总结</h2>
+        <h3>1. 哪些是「一定要保留」的 AI Coding 做法？</h3>
+        <p class="hint">可勾选示例：可按 BU 实际增删。</p>
+        <ul class="hint">
+            <li>□ PRD 评审前由 AI 先生成「需求澄清问题清单」</li>
+            <li>□ 前后端在编码前用 AI 生成「技术方案/接口草稿」并评审</li>
+            <li>□ 开发完成后用 AI 生成单元测试/接口测试草稿再人工修订</li>
+            <li>□ 运维日常用 Qoder CLI 做健康检查和排障报告</li>
+            <li>□ 每周固定 AI Coding 复盘时段，更新规范/模板</li>
+        </ul>
+        <div class="field-value" style="min-height:60px;"></div>
+
+        <h3>2. 哪些是「需要改造」或「不适合本 BU」的做法？</h3>
+        <p class="hint">可勾选示例：用于引导团队识别“反模式”。</p>
+        <ul class="hint">
+            <li>□ 完全让 AI 决定技术方案，评审流于形式</li>
+            <li>□ 只用 AI 生成代码，不做阅读和重构</li>
+            <li>□ 用 AI 直接生成 PRD/设计文档，不再组织面对面评审</li>
+            <li>□ 在复杂核心域（资金、风控等）过度依赖一键生成</li>
+            <li>□ 未将 AI 产出纳入代码库或知识库，导致无法追踪</li>
+        </ul>
+        <div class="field-value" style="min-height:60px;"></div>
+
+        <h3>3. 对企业级 AI Coding 规范的建议</h3>
+        <p class="hint">可勾选示例：帮助 BU 把试点经验上升为公司级规则。</p>
+        <ul class="hint">
+            <li>□ 固化一套「AI Coding 关键规则清单」，按 BU 分类配置</li>
+            <li>□ 要求所有 AI 生成的关键产出进入代码库/知识库管理</li>
+            <li>□ 建立「AI 使用审计」机制，避免安全/合规风险</li>
+            <li>□ 建立跨 BU 的 AI Coding 社区/共创小组，定期分享经验</li>
+            <li>□ 为不同成熟度的团队设计分级试点策略（Level 1~3）</li>
+        </ul>
+        <div class="field-value" style="min-height:80px;"></div>
+    </section>
+</div>
+</body>
+</html>

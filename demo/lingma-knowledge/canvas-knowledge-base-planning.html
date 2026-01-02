@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>企业级知识库建设规划画布（基于通义灵码）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+            background: #ffffff;
+            padding: 15mm;
+            font-size: 9.5pt;
+        }
+        @page {
+            size: A3 landscape;
+            margin: 15mm;
+        }
+        @media print {
+            body { padding: 0; }
+            .no-print { display: none; }
+        }
+        .canvas-container {
+            max-width: 420mm;
+            margin: 0 auto;
+            border: 2px solid #2c3e50;
+            padding: 15px;
+            background: #ffffff;
+        }
+        .canvas-header {
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #2980b9;
+            margin-bottom: 15px;
+        }
+        .canvas-header h1 {
+            font-size: 22pt;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .canvas-header .subtitle {
+            font-size: 11pt;
+            color: #7f8c8d;
+        }
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .section-box {
+            border: 1.5px solid #bdc3c7;
+            padding: 10px;
+            background: #f8f9fa;
+            min-height: 150px;
+        }
+        .section-box h2 {
+            font-size: 13pt;
+            color: #2980b9;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 4px;
+        }
+        .section-box h3 {
+            font-size: 10.5pt;
+            color: #34495e;
+            margin: 8px 0 5px 0;
+        }
+        .section-box ul {
+            margin-left: 18px;
+            font-size: 9pt;
+            line-height: 1.5;
+        }
+        .section-box li {
+            margin-bottom: 3px;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .highlight-red {
+            background: #ffe0e0;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .full-width {
+            grid-column: span 3;
+        }
+        .half-width {
+            grid-column: span 2;
+        }
+        .kb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.5pt;
+            margin-top: 6px;
+        }
+        .kb-table th, .kb-table td {
+            border: 1px solid #bdc3c7;
+            padding: 4px 6px;
+            text-align: left;
+        }
+        .kb-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+            font-size: 9pt;
+        }
+        .kb-table tr:nth-child(even) {
+            background: #ecf0f1;
+        }
+        .timeline-box {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 8px;
+            margin: 6px 0;
+            font-size: 9pt;
+        }
+        .timeline-box strong {
+            color: #2980b9;
+        }
+        .limit-box {
+            background: #ffe8e8;
+            border: 1.5px solid #e74c3c;
+            padding: 8px;
+            margin-top: 8px;
+        }
+        .limit-box h3 {
+            color: #c0392b;
+            font-size: 10.5pt;
+            margin-bottom: 6px;
+        }
+        .limit-box ul {
+            margin-left: 18px;
+            font-size: 9pt;
+            line-height: 1.5;
+        }
+        .best-practice {
+            background: #d5f4e6;
+            border: 1.5px solid #27ae60;
+            padding: 8px;
+            margin-top: 8px;
+        }
+        .best-practice h3 {
+            color: #27ae60;
+            font-size: 10.5pt;
+            margin-bottom: 6px;
+        }
+        .best-practice ul {
+            margin-left: 18px;
+            font-size: 9pt;
+            line-height: 1.5;
+        }
+        .footer {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 2px solid #bdc3c7;
+            text-align: center;
+            font-size: 8pt;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+<div class="canvas-container">
+    <!-- 画布标题 -->
+    <div class="canvas-header">
+        <h1>企业级知识库建设规划画布（投资决策版）</h1>
+        <div class="subtitle">基于通义灵码企业版 | ROI分析 · 分阶段投入 · 风险控制 · 量化目标 | CTO决策专用 | A3 打印版本</div>
+    </div>
+
+    <!-- 第一行：投资回报与分阶段策略 -->
+    <div class="grid-layout">
+        <div class="section-box">
+            <h2>💰 投资回报分析（ROI）</h2>
+            <h3>预期收益（年化）</h3>
+            <ul>
+                <li><strong>开发效率提升：</strong>20-40%（行业benchmark）</li>
+                <li><strong>代码质量提升：</strong>缺陷率降低 15-25%</li>
+                <li><strong>新人上手时间：</strong>缩短 30-50%（2周→1周）</li>
+                <li><strong>重复劳动减少：</strong>文档编写时间节省 40%</li>
+                <li><strong>年化收益估算：</strong>假设 100 人研发团队<br>
+                    效率提升 30% × 人均年成本 40万 = <span class="highlight">1200万/年</span>
+                </li>
+            </ul>
+            <h3>投入成本（首期4周）</h3>
+            <ul>
+                <li><strong>人力投入：</strong>CoE 2人 + 各部门Owner 8人 × 20% = 约3.6人月</li>
+                <li><strong>时间成本：</strong>4周冲刺 + 2个月优化 = 3个月</li>
+                <li><strong>平台成本：</strong>通义灵码企业版（已有）</li>
+                <li><strong>总成本估算：</strong>约 <span class="highlight">12-15万</span>（主要为人力）</li>
+            </ul>
+            <h3>ROI 计算</h3>
+            <ul>
+                <li><strong>回本周期：</strong>3-6 个月</li>
+                <li><strong>年化ROI：</strong>约 <span class="highlight-red">800%</span>（保守估计）</li>
+            </ul>
+        </div>
+
+        <div class="section-box">
+            <h2>🎯 分阶段投入策略（MVP优先）</h2>
+            <h3>阶段一：MVP（最小可行方案）- 2周</h3>
+            <ul>
+                <li><strong>目标：</strong>快速验证价值，降低风险</li>
+                <li><strong>核心知识库：</strong><span class="highlight">仅3-5个</span>（必选）<br>
+                    ① 后端核心框架代码库（BE-Code-Core）<br>
+                    ② 企业编码规范（ORG-Coding-Standards）<br>
+                    ③ 安全基线（ORG-Security-Baseline）<br>
+                    ④ 前端高频组件库（FE-Components）<br>
+                    ⑤ API文档库（API-Docs）
+                </li>
+                <li><strong>试点范围：</strong>1个核心业务线的后端团队（20-30人）</li>
+                <li><strong>验收标准：</strong>代码生成准确率 ≥70%，使用率 ≥50%</li>
+                <li><strong>决策点：</strong>2周后评估，决定是否继续投入</li>
+            </ul>
+            <h3>阶段二：扩展（Scale Up）- 4周</h3>
+            <ul>
+                <li><strong>前提：</strong>MVP验证成功，ROI符合预期</li>
+                <li><strong>扩展知识库：</strong>增加至 <span class="highlight">10-15个</span><br>
+                    补充：测试策略、架构规范、运维手册、业务文档等
+                </li>
+                <li><strong>试点扩大：</strong>覆盖前端、移动端、测试团队（50-80人）</li>
+            </ul>
+            <h3>阶段三：全面推广 - 2-3个月</h3>
+            <ul>
+                <li><strong>目标：</strong>覆盖全公司研发团队（100+人）</li>
+                <li><strong>知识库总数：</strong>稳定在 <span class="highlight">15-25个</span>（避免碎片化）</li>
+            </ul>
+        </div>
+
+        <div class="section-box">
+            <h2>⚠️ 风险控制与应对预案</h2>
+            <h3>风险1：知识库质量不达标</h3>
+            <ul>
+                <li><strong>风险表现：</strong>AI生成代码错误率高、不符合规范</li>
+                <li><strong>应对措施：</strong><br>
+                    · 建立三级审核机制（Owner审核→技术委员会抽查→试点反馈）<br>
+                    · 设置质量红线：错误率 >30% 立即下线整改<br>
+                    · 每周质量周报，CTO直接监督
+                </li>
+            </ul>
+            <h3>风险2：部门配合度低</h3>
+            <ul>
+                <li><strong>风险表现：</strong>部门Owner不投入、文档不更新</li>
+                <li><strong>应对措施：</strong><br>
+                    · 纳入部门KPI（权重5-10%）<br>
+                    · CTO直接任命Owner，不配合的部门暂缓接入<br>
+                    · 优秀案例给予团队奖励（5-10万/年）
+                </li>
+            </ul>
+            <h3>风险3：数据安全与隐私泄露</h3>
+            <ul>
+                <li><strong>风险表现：</strong>敏感信息进入知识库、权限管理混乱</li>
+                <li><strong>应对措施：</strong><br>
+                    · 上传前强制脱敏（AK/SK、用户隐私数据）<br>
+                    · 权限最小化原则，按部门隔离<br>
+                    · 安全团队每月审计，违规者追责
+                </li>
+            </ul>
+            <h3>风险4：平台限制超标</h3>
+            <ul>
+                <li><strong>风险表现：</strong>代码库超5GB、向量库满载</li>
+                <li><strong>应对措施：</strong><br>
+                    · 每月监控存储用量，预警机制（>80%告警）<br>
+                    · 定期清理过时文档（季度清理）<br>
+                    · 必要时升级至企业专属版
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 第二行：知识库分类总览（优先级排序）-->
+    <div class="grid-layout">
+        <div class="section-box full-width">
+            <h2>📚 企业级知识库分类总览（6 大类 · 建议 15-30 个知识库）</h2>
+            <table class="kb-table">
+                <thead>
+                <tr>
+                    <th style="width: 5%;">优先级</th>
+                    <th style="width: 13%;">知识库大类</th>
+                    <th style="width: 22%;">包含内容（示例）</th>
+                    <th style="width: 10%;">数量</th>
+                    <th style="width: 12%;">责任部门</th>
+                    <th style="width: 10%;">准备时间</th>
+                    <th style="width: 12%;">资料大小</th>
+                    <th style="width: 16%;">量化目标</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="highlight-red">P0</span><br>必选</td>
+                    <td><strong>1. 代码库类</strong><br>（Code）</td>
+                    <td>
+                        · 前端规范代码（React/Vue 组件、工具函数）<br>
+                        · 后端规范代码（Java/Go/Python 业务框架、中间件）<br>
+                        · 移动端代码（Flutter/RN 组件）
+                    </td>
+                    <td>MVP:2<br>扩展:4-6</td>
+                    <td>前后端团队</td>
+                    <td>MVP:第1周<br>扩展:第2-3周</td>
+                    <td>MVP:200-500MB<br>扩展:1-2GB</td>
+                    <td>代码生成准确率≥70%<br>召回率≥60%</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight-red">P0</span><br>必选</td>
+                    <td><strong>2. 编码规范类</strong><br>（Coding Standards）</td>
+                    <td>
+                        · 前端编码规范（TypeScript/ESLint 规则、组件设计规范）<br>
+                        · 后端编码规范（Java/Go 编码规范、分层架构规范）<br>
+                        · 数据库设计规范（表命名、索引规范）
+                    </td>
+                    <td>MVP:1<br>扩展:2-3</td>
+                    <td>技术委员会</td>
+                    <td>MVP:第1周<br>扩展:第3周</td>
+                    <td>20-100MB</td>
+                    <td>规范覆盖率≥80%<br>规范遵循度≥75%</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight-red">P0</span><br>必选</td>
+                    <td><strong>3. 安全与合规类</strong><br>（Security & Compliance）</td>
+                    <td>
+                        · 安全编码规范（OWASP Top 10、SQL 注入防范）<br>
+                        · 数据安全管理规范（AK/SK 使用、数据加密）<br>
+                        · 合规审查 Checklist（隐私保护、审计日志）
+                    </td>
+                    <td>MVP:1<br>扩展:1-2</td>
+                    <td>安全团队</td>
+                    <td>MVP:第1周<br>扩展:第4周</td>
+                    <td>20-80MB</td>
+                    <td>安全漏洞检出率≥30%</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">P1</span><br>重要</td>
+                    <td><strong>4. 业务文档类</strong><br>（Business Docs）</td>
+                    <td>
+                        · 业务领域模型文档（电商/金融/物流领域术语）<br>
+                        · API 使用文档（内部平台 API、第三方对接文档）<br>
+                        · 产品需求文档（PRD 模板、需求变更流程）
+                    </td>
+                    <td>MVP:1<br>扩展:3-5</td>
+                    <td>产品+技术</td>
+                    <td>MVP:第2周<br>扩展:第3-5周</td>
+                    <td>100-800MB</td>
+                    <td>业务理解准确率≥65%</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">P2</span><br>可选</td>
+                    <td><strong>5. 设计规范类</strong><br>（Design Standards）</td>
+                    <td>
+                        · UI/UE 设计规范（设计系统、组件库说明）<br>
+                        · 架构设计规范（微服务架构原则、ADR 模板）<br>
+                        · 数据库设计规范（分库分表、读写分离）
+                    </td>
+                    <td>扩展:2-3</td>
+                    <td>设计+架构</td>
+                    <td>扩展:第4-6周</td>
+                    <td>80-400MB</td>
+                    <td>设计一致性≥85%</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">P1</span><br>重要</td>
+                    <td><strong>6. 运维与工具类</strong><br>（DevOps & Tools）</td>
+                    <td>
+                        · CI/CD 流程规范（Jenkins/GitLab CI 模板）<br>
+                        · 运维手册（故障排查、告警处理）<br>
+                        · 工具使用手册（内部平台、监控系统）
+                    </td>
+                    <td>扩展:2-3</td>
+                    <td>DevOps团队</td>
+                    <td>扩展:第5-7周</td>
+                    <td>80-400MB</td>
+                    <td>运维效率提升≥25%</td>
+                </tr>
+                <tr style="background: #fff9e6;">
+                    <td colspan="4"><strong>总计</strong></td>
+                    <td colspan="4"><strong>MVP: 3-5个 | 扩展期: 10-15个 | 成熟期: 15-25个 | 总大小: 0.5-4GB</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 第二行：详细准备清单示例 -->
+    <div class="grid-layout">
+        <div class="section-box">
+            <h2>📋 代码库类准备清单</h2>
+            <h3>前端代码库（FE-Code）</h3>
+            <ul>
+                <li><strong>必需：</strong>高频自定义组件（如 LTable、LForm）</li>
+                <li>工具函数库（日期处理、数据验证）</li>
+                <li>业务逻辑复用代码（用户认证、权限控制）</li>
+                <li><strong>格式：</strong>.js / .jsx / .ts / .tsx 文件</li>
+                <li><strong>注释要求：</strong>函数头部需详细注释（≥15 字符）</li>
+                <li><strong>示例数量：</strong>50–200 个高质量代码文件</li>
+            </ul>
+            <h3>后端代码库（BE-Code）</h3>
+            <ul>
+                <li><strong>必需：</strong>企业自研框架（分布式锁、雪花算法）</li>
+                <li>业务框架代码（库存管理、订单处理）</li>
+                <li>通用工具类（日志、异常处理）</li>
+                <li><strong>格式：</strong>.java / .go / .py 等源代码文件</li>
+                <li><strong>示例数量：</strong>100–500 个核心业务代码文件</li>
+            </ul>
+        </div>
+
+        <div class="section-box">
+            <h2>📄 文档类准备清单</h2>
+            <h3>编码规范文档（Coding Standards）</h3>
+            <ul>
+                <li>《Java 编程规范》（Markdown/PDF，100-200 页）</li>
+                <li>《TypeScript 编码规范》（含 ESLint 配置）</li>
+                <li>《API 设计规范》（RESTful/RPC 规范）</li>
+                <li><strong>格式：</strong>优先 Markdown，其次 PDF/DOCX</li>
+                <li><strong>命名规范：</strong>明确具体，如《Java-Spring-编码规范-v2.0》</li>
+            </ul>
+            <h3>安全规范文档（Security）</h3>
+            <ul>
+                <li>《AK/SK 安全使用规范》</li>
+                <li>《OWASP Top 10 安全检查清单》</li>
+                <li>《数据加密与脱敏规范》</li>
+                <li><strong>示例数量：</strong>5–10 个核心安全文档</li>
+            </ul>
+            <h3>UI/UE 设计规范（Design）</h3>
+            <ul>
+                <li>《设计系统规范 v3.0》（含组件库说明）</li>
+                <li>《移动端设计规范》（iOS/Android）</li>
+                <li><strong>格式：</strong>PDF（Figma 导出）+ Markdown 说明</li>
+            </ul>
+        </div>
+
+        <div class="section-box">
+            <h2>🎯 业务文档类准备清单</h2>
+            <h3>业务领域文档（Domain Knowledge）</h3>
+            <ul>
+                <li>《电商业务术语词典》（SKU、SPU、GMV 等）</li>
+                <li>《金融业务流程说明》（风控、清结算）</li>
+                <li>《物流配送业务规则》</li>
+            </ul>
+            <h3>API 文档（API Docs）</h3>
+            <ul>
+                <li>《内部平台 API 文档》（OpenAPI 规范）</li>
+                <li>《第三方对接文档》（支付/短信/地图）</li>
+                <li><strong>格式：</strong>Markdown / Swagger JSON</li>
+            </ul>
+            <h3>运维手册（Operations）</h3>
+            <ul>
+                <li>《故障排查手册》（数据库/缓存/消息队列）</li>
+                <li>《告警处理 SOP》</li>
+                <li>《发布回滚流程》</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 第三行：时间规划与部门分工 -->
+    <div class="grid-layout">
+        <div class="section-box half-width">
+            <h2>⏱️ 执行路线图与里程碑验收（4周冲刺+8周优化）</h2>
+            <div class="timeline-box">
+                <strong>【MVP阶段】第1-2周：核心验证</strong><br>
+                <strong>关键交付物：</strong><br>
+                · 第3天：CoE完成知识库命名规范+部门责任矩阵<br>
+                · 第5天：后端核心框架代码库上线（BE-Code-Core，300-500MB）<br>
+                · 第7天：企业编码规范+安全基线上线（ORG-Coding-Standards + ORG-Security）<br>
+                · 第10天：前端组件库+API文档上线（FE-Components + API-Docs）<br>
+                · 第14天：试点团队使用数据报告（≥50%使用率）<br>
+                <strong>里程碑验收：</strong>代码生成准确率≥70%，使用率≥50%，CTO决策是否继续
+            </div>
+            <div class="timeline-box">
+                <strong>【扩展阶段】第3-6周：规模化</strong><br>
+                <strong>关键交付物：</strong><br>
+                · 第3周：补充测试策略知识库（QA-Testing-Guide）<br>
+                · 第4周：补充架构规范+业务文档（ARCH-Architecture + Business-Docs-Core）<br>
+                · 第5周：补充运维手册+设计规范（PLAT-DevOps + DESIGN-Standards）<br>
+                · 第6周：全面复盘会+优化计划<br>
+                <strong>里程碑验收：</strong>知识库总数10-15个，覆盖50-80人，效率提升≥20%
+            </div>
+            <div class="timeline-box">
+                <strong>【优化阶段】第7-12周：持续改进</strong><br>
+                · 根据试点反馈优化知识库内容（每周迭代）<br>
+                · 补充新场景文档（移动端、数据分析等）<br>
+                · 定期质量审核（每周质量周报）<br>
+                <strong>最终目标：</strong>知识库稳定在15-25个，覆盖率≥80%，使用度≥60%，效率提升≥30%
+            </div>
+            <div class="timeline-box" style="background: #fff9e6; border-left-color: #f39c12;">
+                <strong>【关键决策点】</strong><br>
+                · 第2周：MVP验收 → 决定是否继续投入（GO/NO-GO）<br>
+                · 第6周：扩展验收 → 决定是否全面推广<br>
+                · 第12周：效果评估 → 决定是否长期投入+升级专属版
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h2>👥 CTO决策清单（第1周关键行动）</h2>
+            <h3>决策1：确定投资策略</h3>
+            <ul>
+                <li><strong>选择方案：</strong>□ MVP验证（2周，3-5个库）  □ 直接全量（4周，15+个库）</li>
+                <li><strong>推荐：</strong>MVP优先，降低风险</li>
+            </ul>
+            <h3>决策2：任命核心团队</h3>
+            <ul>
+                <li><strong>CoE负责人：</strong>________（第1天任命）</li>
+                <li><strong>后端Owner：</strong>________（第1天任命）</li>
+                <li><strong>前端Owner：</strong>________（第1天任命）</li>
+                <li><strong>安全Owner：</strong>________（第1天任命）</li>
+            </ul>
+            <h3>决策3：选择试点部门</h3>
+            <ul>
+                <li><strong>MVP试点：</strong>□ 核心业务线A  □ 核心业务线B（第2天确定）</li>
+                <li><strong>人数规模：</strong>20-30人（后端为主）</li>
+            </ul>
+            <h3>决策4：设定验收标准</h3>
+            <ul>
+                <li><strong>第2周验收红线：</strong><br>
+                    · 代码生成准确率 ≥70%（低于则暂停）<br>
+                    · 团队使用率 ≥50%（低于则重新培训）<br>
+                    · 错误率 <30%（超过则下线整改）
+                </li>
+            </ul>
+            <h3>决策5：明确激励与惩罚</h3>
+            <ul>
+                <li><strong>激励：</strong>优秀部门团队奖励5-10万/年，纳入年度评优</li>
+                <li><strong>惩罚：</strong>不配合部门KPI扣5-10%，Owner调岗</li>
+            </ul>
+            <h3>决策6：风险阈值</h3>
+            <ul>
+                <li><strong>数据安全红线：</strong>一次敏感数据泄露 → 项目暂停+责任追究</li>
+                <li><strong>质量红线：</strong>错误率>30% → 立即下线整改</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 第四行：资源限制与最佳实践 -->
+    <div class="grid-layout">
+        <div class="section-box half-width">
+            <div class="limit-box">
+                <h3>⚠️ 通义灵码企业版资源限制（官方数据 - 2026年1月）</h3>
+                <ul>
+                    <li><strong>代码库限制：</strong>
+                        <br>· 单个代码包 ≤ 100MB（压缩后）
+                        <br>· 企业标准版：总代码库 ≤ 5GB
+                        <br>· 企业专属版：总代码库 ≤ 50GB
+                    </li>
+                    <li><strong>文档库限制：</strong>
+                        <br>· 单文件 ≤ 10MB
+                        <br>· 每次上传 ≤ 10 个文件
+                        <br>· 支持格式：Markdown/PDF/DOCX/TXT/CSV
+                    </li>
+                    <li><strong>向量存储空间：</strong>
+                        <br>· 企业标准版：≤ 20GB
+                        <br>· 企业专属版：≤ 100GB
+                        <br>· <span class="highlight-red">注意：向量库大小约为原文件的3-5倍</span>
+                    </li>
+                    <li><strong>知识库数量：</strong>无硬性限制，但建议 ≤ 30 个（避免管理混乱）</li>
+                    <li><strong>并发限制：</strong>
+                        <br>· 企业标准版：≤ 100 并发用户
+                        <br>· 企业专属版：≤ 1000 并发用户
+                    </li>
+                    <li><strong>API调用限制：</strong>
+                        <br>· 代码补全：每用户 1000次/天
+                        <br>· 智能问答：每用户 500次/天
+                    </li>
+                    <li><strong>处理时间：</strong>
+                        <br>· 代码库索引：10-30分钟（视大小）
+                        <br>· 文档解析：1-5分钟/文件
+                    </li>
+                </ul>
+                <h3 style="margin-top: 8px;">⚠️ 关键约束与应对</h3>
+                <ul>
+                    <li><strong>约束1：</strong>向量库是原文件3-5倍 → <strong>应对：</strong>1GB代码最多占用5GB向量空间，需预留缓冲</li>
+                    <li><strong>约束2：</strong>单包100MB限制 → <strong>应对：</strong>大型代码库需拆分上传，按模块/功能分包</li>
+                    <li><strong>约束3：</strong>注释≥15字符才召回 → <strong>应对：</strong>上传前统一检查注释质量</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="best-practice">
+                <h3>✅ 企业级知识库最佳实践（10 条黄金法则）</h3>
+                <ul>
+                    <li><strong>1. 命名规范：</strong>使用清晰命名，如《Java-Spring-编码规范-v2.0》，避免《编码规范1》</li>
+                    <li><strong>2. 文档格式：</strong>优先 Markdown，便于 AI 解析；PDF 需确保文本可提取</li>
+                    <li><strong>3. 代码注释：</strong>函数头部需详细注释（≥15 字符），含参数/返回值说明</li>
+                    <li><strong>4. 结构化内容：</strong>多级标题、分点陈述、避免大段落堆砌</li>
+                    <li><strong>5. 避免干扰：</strong>去除页眉页脚、水印、目录、关键词罗列</li>
+                    <li><strong>6. 知识独立：</strong>每个文档自成体系，避免"同上""见第 X 章"等指代</li>
+                    <li><strong>7. 知识聚合：</strong>同一主题知识聚合在一起，避免过度分散</li>
+                    <li><strong>8. 权限管理：</strong>企业级公开 + 部门级私有，按职责授权</li>
+                    <li><strong>9. 定期更新：</strong>每季度审核一次，补充新知识、淘汰过时内容</li>
+                    <li><strong>10. 试点先行：</strong>选 1-2 个部门先试点，验证效果后推广</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第五行：快速启动检查清单 -->
+    <div class="grid-layout">
+        <div class="section-box full-width">
+            <h2>🚀 CTO 第1周执行检查清单（必做事项 + 责任人 + 交付物）</h2>
+            <table class="kb-table">
+                <thead>
+                <tr>
+                    <th style="width: 4%;">日期</th>
+                    <th style="width: 5%;">序号</th>
+                    <th style="width: 20%;">关键任务</th>
+                    <th style="width: 30%;">具体交付物（可验收）</th>
+                    <th style="width: 12%;">责任人</th>
+                    <th style="width: 14%;">成功标准</th>
+                    <th style="width: 5%;">状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>D1</td>
+                    <td>1</td>
+                    <td>CTO决策：选择MVP还是全量</td>
+                    <td>【决策记录】投资策略选择（MVP/全量）+预算批复</td>
+                    <td>CTO</td>
+                    <td>确定MVP方案</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D1</td>
+                    <td>2</td>
+                    <td>任命核心团队</td>
+                    <td>【任命书】CoE负责人+后端/前端/安全Owner名单</td>
+                    <td>CTO</td>
+                    <td>人员到位</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D2</td>
+                    <td>3</td>
+                    <td>选择MVP试点部门</td>
+                    <td>【试点方案】试点部门名称+人员名单（20-30人）</td>
+                    <td>CTO+部门负责人</td>
+                    <td>试点部门确认</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D3</td>
+                    <td>4</td>
+                    <td>CoE完成规范体系</td>
+                    <td>【规范文档】5页：知识库命名规范+部门责任矩阵+质量标准</td>
+                    <td>CoE负责人</td>
+                    <td>技术委员会审批</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D5</td>
+                    <td>5</td>
+                    <td>后端核心代码库上线</td>
+                    <td>【代码库】BE-Code-Core（300-500MB）+注释质量报告</td>
+                    <td>后端Owner</td>
+                    <td>注释覆盖率≥80%</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D5</td>
+                    <td>6</td>
+                    <td>建立激励与惩罚机制</td>
+                    <td>【制度文件】奖励方案（5-10万）+KPI考核细则（5-10%）</td>
+                    <td>CTO+HR</td>
+                    <td>制度发布</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D7</td>
+                    <td>7</td>
+                    <td>企业规范+安全基线上线</td>
+                    <td>【文档库】ORG-Coding-Standards + ORG-Security-Baseline（20-50MB）</td>
+                    <td>技术委员会+安全Owner</td>
+                    <td>文档结构化完成</td>
+                    <td>☐</td>
+                </tr>
+                <tr>
+                    <td>D7</td>
+                    <td>8</td>
+                    <td>组织试点团队培训</td>
+                    <td>【培训资料】使用手册+视频+会议纪要（20-30人签到）</td>
+                    <td>CoE负责人</td>
+                    <td>培训满意度≥80%</td>
+                    <td>☐</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+        企业级知识库建设规划画布（CTO决策版） | 版本 2.0 | 建议打印为 A3 横向 | 基于通义灵码企业版最佳实践 | <strong>关键改进：</strong>ROI量化 · 分阶段投入 · 风险控制 · 执行路线图 · 决策检查清单 | 更新日期：2026-01-01
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Coding 全面推广画布 - 企业级落地看板</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff; /* 白色背景 */
+            color: #222;
+        }
+        .canvas {
+            max-width: 1280px;
+            margin: 0 auto 48px auto;
+        }
+        h1, h2, h3, h4 {
+            margin: 0 0 8px 0;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 18px;
+            border-left: 4px solid #222;
+            padding-left: 8px;
+            margin-top: 24px;
+        }
+        h3 {
+            font-size: 16px;
+            margin-top: 16px;
+        }
+        p {
+            margin: 4px 0;
+        }
+        .section {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-top: 16px;
+        }
+        .section-header-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .field {
+            min-width: 200px;
+            margin: 4px 0;
+        }
+        .field-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .field-value {
+            min-height: 20px;
+            padding: 2px 4px;
+            border-bottom: 1px dashed #ccc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            vertical-align: top;
+        }
+        th {
+            background: #f7f7f7;
+            font-weight: 600;
+            text-align: left;
+        }
+        .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .checkbox-cell {
+            text-align: center;
+            width: 52px;
+        }
+        .bu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .bu-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .bu-name {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+        .status-ready { background: #d4edda; color: #155724; }
+        .status-progress { background: #fff3cd; color: #856404; }
+        .status-pending { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<div class="canvas">
+    <header>
+        <h1>AI Coding 全面推广画布（企业级）</h1>
+        <p class="hint">用途：在试点成功后,将 AI Coding 推广到全公司所有 BU/部门,建立统一规范、培训体系、支持机制与度量体系。</p>
+        <p class="hint">前置条件：已完成至少 2-3 个 BU 的试点,验证了核心规则可行性,沉淀了可复用的模板与最佳实践。</p>
+    </header>
+
+    <!-- 1. 推广基本信息 -->
+    <section class="section" id="basic-info">
+        <h2>一、推广基本信息</h2>
+        <div class="section-header-row">
+            <div class="field">
+                <div class="field-label">推广负责人</div>
+                <div class="field-value">[CTO / 技术委员会 / CoE 负责人]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">推广周期</div>
+                <div class="field-value">[示例：2026-03-01 ~ 2026-06-30, 共 4 个月]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">覆盖范围</div>
+                <div class="field-value">[示例：全公司 8 个 BU, 约 120 人]</div>
+            </div>
+            <div class="field">
+                <div class="field-label">支持团队</div>
+                <div class="field-value">[CoE 团队 / 平台团队 / 培训团队]</div>
+            </div>
+        </div>
+        <h3>推广目标</h3>
+        <p class="hint">示例：所有 BU 完成 AI Coding 接入,80% 的研发人员日常使用 AI Coding,关键指标（效率/质量）全面提升 X%。</p>
+        <div class="field-value" style="min-height:48px;"></div>
+    </section>
+
+    <!-- 2. 各 BU 推广进度看板 -->
+    <section class="section" id="bu-progress">
+        <h2>二、各 BU 推广进度看板</h2>
+        <p class="hint">跟踪每个 BU 的接入状态、培训完成度、规则配置进度、实际使用率。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 140px;">BU / 事业部</th>
+                <th style="width: 100px;">负责人</th>
+                <th style="width: 100px;">团队规模</th>
+                <th style="width: 120px;">接入状态</th>
+                <th style="width: 100px;">培训完成度</th>
+                <th style="width: 100px;">规则配置</th>
+                <th style="width: 100px;">实际使用率</th>
+                <th>关键问题 / 风险</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>[示例：电商事业部]</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 已完成 □ 进行中 □ 未开始</td>
+                <td></td>
+                <td class="checkbox-cell">□ 已配置 □ 进行中</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>[示例：支付事业部]</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 已完成 □ 进行中 □ 未开始</td>
+                <td></td>
+                <td class="checkbox-cell">□ 已配置 □ 进行中</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>[示例：物流事业部]</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 已完成 □ 进行中 □ 未开始</td>
+                <td></td>
+                <td class="checkbox-cell">□ 已配置 □ 进行中</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 已完成 □ 进行中 □ 未开始</td>
+                <td></td>
+                <td class="checkbox-cell">□ 已配置 □ 进行中</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 已完成 □ 进行中 □ 未开始</td>
+                <td></td>
+                <td class="checkbox-cell">□ 已配置 □ 进行中</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 3. 企业级 AI Coding 规范体系 -->
+    <section class="section" id="standards">
+        <h2>三、企业级 AI Coding 规范体系</h2>
+        <p class="hint">从试点经验中提炼出的企业级规范,包括强制规则、推荐规则、禁止规则三个层级。</p>
+        
+        <h3>3.1 强制规则（所有 BU 必须遵守）</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 280px;">规则内容</th>
+                <th style="width: 140px;">适用角色</th>
+                <th style="width: 120px;">配置状态</th>
+                <th>执行检查方式</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>所有 AI 生成的代码必须经过人工 Review 才能合并到主分支</td>
+                <td>前端 / 后端</td>
+                <td class="checkbox-cell">□ 已配置</td>
+                <td>[示例：Git Hook 检查 + Code Review 流程]</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>禁止将生产环境敏感信息（密钥、密码、客户数据）输入 AI 工具</td>
+                <td>全员</td>
+                <td class="checkbox-cell">□ 已配置</td>
+                <td>[示例：安全培训 + 定期审计]</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>所有 AI 生成的关键产出（文档、脚本、配置）必须纳入版本管理</td>
+                <td>全员</td>
+                <td class="checkbox-cell">□ 已配置</td>
+                <td>[示例：知识库 / 代码库追踪]</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>核心业务模块（支付、资金、风控）禁止使用 AI 一键生成,必须人工主导</td>
+                <td>后端 / 架构</td>
+                <td class="checkbox-cell">□ 已配置</td>
+                <td>[示例：分类管理 + 架构评审]</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td></td>
+                <td></td>
+                <td class="checkbox-cell">□ 已配置</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>3.2 推荐规则（各 BU 根据情况选择）</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 280px;">规则内容</th>
+                <th style="width: 140px;">适用角色</th>
+                <th style="width: 120px;">采纳 BU 数</th>
+                <th>最佳实践案例</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>PRD 评审前,产品经理使用 AI 生成「需求澄清问题清单」</td>
+                <td>产品</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>前后端在编码前,使用 AI 生成「技术方案草稿」并评审</td>
+                <td>前端 / 后端</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>开发完成后,使用 AI 生成单元测试草稿,再人工修订</td>
+                <td>后端 / 测试</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>运维日常使用 Qoder CLI 做健康检查和排障诊断</td>
+                <td>运维</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>3.3 禁止规则（反模式清单）</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 380px;">禁止行为</th>
+                <th style="width: 280px;">风险说明</th>
+                <th>检测与处罚机制</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>完全依赖 AI 决定技术方案,评审流于形式</td>
+                <td>可能导致方案不合理、不符合企业架构约束</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>只用 AI 生成代码,不做阅读理解和重构</td>
+                <td>积累技术债务、代码质量下降、团队能力退化</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>绕过 Code Review 直接合并 AI 生成的代码</td>
+                <td>引入安全漏洞、业务逻辑错误</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>将客户敏感数据、生产密钥输入公共 AI 平台</td>
+                <td>数据泄露、合规风险</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 4. 培训与赋能体系 -->
+    <section class="section" id="training">
+        <h2>四、培训与赋能体系</h2>
+        <p class="hint">分角色、分层级设计培训方案,确保每个人都能掌握 AI Coding 核心技能。</p>
+        
+        <h3>4.1 培训方案矩阵</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 100px;">角色</th>
+                <th style="width: 200px;">培训内容</th>
+                <th style="width: 100px;">培训形式</th>
+                <th style="width: 80px;">时长</th>
+                <th style="width: 100px;">完成标准</th>
+                <th style="width: 120px;">认证方式</th>
+                <th>负责团队</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>产品经理</td>
+                <td>AI 辅助需求分析、用例生成、PRD 优化</td>
+                <td>线上课程 + 实操</td>
+                <td>2 小时</td>
+                <td>完成 1 个真实需求案例</td>
+                <td>□ 已认证</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>前端工程师</td>
+                <td>AI 辅助组件开发、测试用例生成、代码审查</td>
+                <td>工作坊 + 练习</td>
+                <td>4 小时</td>
+                <td>通过技能测试</td>
+                <td>□ 已认证</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>后端工程师</td>
+                <td>AI 辅助接口设计、单测生成、重构分析</td>
+                <td>工作坊 + 练习</td>
+                <td>4 小时</td>
+                <td>通过技能测试</td>
+                <td>□ 已认证</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>测试工程师</td>
+                <td>AI 辅助用例设计、自动化脚本生成、缺陷分析</td>
+                <td>工作坊 + 练习</td>
+                <td>3 小时</td>
+                <td>完成 1 个测试场景</td>
+                <td>□ 已认证</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>运维工程师</td>
+                <td>Qoder CLI 使用、排障诊断、运维脚本生成</td>
+                <td>实操演练</td>
+                <td>3 小时</td>
+                <td>完成健康检查实操</td>
+                <td>□ 已认证</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>架构师 / TL</td>
+                <td>AI Coding 规范设计、团队辅导、最佳实践沉淀</td>
+                <td>专题培训</td>
+                <td>4 小时</td>
+                <td>完成 BU 规则配置</td>
+                <td>□ 已认证</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>4.2 培训完成度统计</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 140px;">BU / 事业部</th>
+                <th style="width: 100px;">应培训人数</th>
+                <th style="width: 100px;">已完成人数</th>
+                <th style="width: 100px;">完成率</th>
+                <th style="width: 100px;">认证通过率</th>
+                <th>未完成原因</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>[示例：电商事业部]</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>[示例：支付事业部]</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 5. 支持与保障机制 -->
+    <section class="section" id="support">
+        <h2>五、支持与保障机制</h2>
+        <p class="hint">建立专职支持团队、问题响应机制、知识库与社区,确保推广顺利。</p>
+        
+        <h3>5.1 支持团队职责</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 120px;">团队 / 角色</th>
+                <th style="width: 280px;">主要职责</th>
+                <th style="width: 100px;">负责人</th>
+                <th style="width: 120px;">响应时效</th>
+                <th>联系方式</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>CoE 团队</td>
+                <td>规范制定、最佳实践沉淀、跨 BU 协调</td>
+                <td></td>
+                <td>24 小时内响应</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>平台团队</td>
+                <td>工具平台维护、账号配置、技术支持</td>
+                <td></td>
+                <td>4 小时内响应</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>培训团队</td>
+                <td>培训课程开发、认证考核、培训效果跟踪</td>
+                <td></td>
+                <td>1 周内安排</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>安全团队</td>
+                <td>安全审计、合规检查、风险预警</td>
+                <td></td>
+                <td>24 小时内响应</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 问题响应与升级机制</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 80px;">问题级别</th>
+                <th style="width: 200px;">定义</th>
+                <th style="width: 120px;">响应时效</th>
+                <th style="width: 120px;">解决时效</th>
+                <th style="width: 140px;">升级路径</th>
+                <th>示例</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>P0（紧急）</td>
+                <td>影响生产环境、数据安全问题</td>
+                <td>1 小时内</td>
+                <td>4 小时内</td>
+                <td>CoE → CTO</td>
+                <td>AI 工具泄露敏感数据</td>
+            </tr>
+            <tr>
+                <td>P1（高优）</td>
+                <td>影响 BU 推广进度、关键功能不可用</td>
+                <td>4 小时内</td>
+                <td>1 工作日内</td>
+                <td>平台团队 → CoE</td>
+                <td>账号配置失败、工具无法使用</td>
+            </tr>
+            <tr>
+                <td>P2（中优）</td>
+                <td>影响使用体验、非阻塞性问题</td>
+                <td>1 工作日内</td>
+                <td>3 工作日内</td>
+                <td>支持团队内部</td>
+                <td>某个功能不够好用</td>
+            </tr>
+            <tr>
+                <td>P3（低优）</td>
+                <td>优化建议、咨询类问题</td>
+                <td>3 工作日内</td>
+                <td>1 周内</td>
+                <td>知识库自助</td>
+                <td>如何更好地使用某个功能</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>5.3 知识库与社区建设</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 140px;">类型</th>
+                <th style="width: 280px;">内容</th>
+                <th style="width: 120px;">更新频率</th>
+                <th style="width: 100px;">负责团队</th>
+                <th>访问方式</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>企业知识库</td>
+                <td>规范文档、模板库、最佳实践案例</td>
+                <td>每月更新</td>
+                <td>CoE 团队</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>FAQ 库</td>
+                <td>常见问题与解决方案</td>
+                <td>实时更新</td>
+                <td>平台团队</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>案例库</td>
+                <td>各 BU 成功案例、失败教训</td>
+                <td>每季度更新</td>
+                <td>CoE 团队</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>AI Coding 社区</td>
+                <td>跨 BU 交流群、月度分享会、内部论坛</td>
+                <td>持续运营</td>
+                <td>CoE 团队</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 6. 度量与效果评估 -->
+    <section class="section" id="metrics">
+        <h2>六、度量与效果评估</h2>
+        <p class="hint">建立多维度度量体系,跟踪 AI Coding 推广效果,支持数据驱动的决策。</p>
+        
+        <h3>6.1 企业级关键指标</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 140px;">维度</th>
+                <th style="width: 220px;">指标</th>
+                <th style="width: 100px;">推广前基线</th>
+                <th style="width: 100px;">当前值</th>
+                <th style="width: 100px;">目标值</th>
+                <th style="width: 100px;">达成情况</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>覆盖度</td>
+                <td>AI Coding 活跃使用率</td>
+                <td></td>
+                <td></td>
+                <td>≥ 80%</td>
+                <td></td>
+                <td>每周至少使用 1 次</td>
+            </tr>
+            <tr>
+                <td>效率</td>
+                <td>需求评审 → 上线周期</td>
+                <td></td>
+                <td></td>
+                <td>缩短 20%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>效率</td>
+                <td>单元测试编写时间</td>
+                <td></td>
+                <td></td>
+                <td>减少 40%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>质量</td>
+                <td>P0/P1 线上缺陷数</td>
+                <td></td>
+                <td></td>
+                <td>下降 15%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>质量</td>
+                <td>代码审查发现问题数</td>
+                <td></td>
+                <td></td>
+                <td>下降 25%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>满意度</td>
+                <td>团队 AI Coding 满意度</td>
+                <td></td>
+                <td></td>
+                <td>≥ 4.0/5.0</td>
+                <td></td>
+                <td>季度问卷调查</td>
+            </tr>
+            <tr>
+                <td>规范</td>
+                <td>企业级规范沉淀数</td>
+                <td></td>
+                <td></td>
+                <td>≥ 20 份</td>
+                <td></td>
+                <td>包含各角色模板</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>6.2 各 BU 效果对比</h3>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 140px;">BU / 事业部</th>
+                <th style="width: 100px;">使用率</th>
+                <th style="width: 100px;">效率提升</th>
+                <th style="width: 100px;">质量提升</th>
+                <th style="width: 100px;">满意度</th>
+                <th style="width: 140px;">表现评级</th>
+                <th>亮点 / 问题</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>[示例：电商事业部]</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>优秀 / 良好 / 一般 / 待改进</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>[示例：支付事业部]</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>优秀 / 良好 / 一般 / 待改进</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>优秀 / 良好 / 一般 / 待改进</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 7. 风险管理 -->
+    <section class="section" id="risks">
+        <h2>七、风险管理与应对</h2>
+        <p class="hint">识别推广过程中的关键风险,制定预防与应对措施。</p>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th style="width: 200px;">风险描述</th>
+                <th style="width: 100px;">可能性</th>
+                <th style="width: 100px;">影响程度</th>
+                <th style="width: 220px;">预防措施</th>
+                <th style="width: 220px;">应对方案</th>
+                <th style="width: 100px;">责任人</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>部分 BU 抵触,推广进度缓慢</td>
+                <td>中</td>
+                <td>高</td>
+                <td>提前沟通,展示试点成果;强化激励机制</td>
+                <td>高层推动,设置强制接入时间节点</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>AI 生成代码质量问题导致线上事故</td>
+                <td>中</td>
+                <td>高</td>
+                <td>强制 Code Review;核心模块禁用一键生成</td>
+                <td>事故复盘,更新规范;暂停相关功能</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>敏感数据泄露,合规风险</td>
+                <td>低</td>
+                <td>极高</td>
+                <td>安全培训;技术手段防护;定期审计</td>
+                <td>立即停用;溯源整改;上报处理</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>培训资源不足,无法覆盖所有团队</td>
+                <td>中</td>
+                <td>中</td>
+                <td>提前规划培训计划;录制在线课程</td>
+                <td>分批培训;优先关键岗位</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>工具平台稳定性问题,影响使用体验</td>
+                <td>中</td>
+                <td>中</td>
+                <td>压力测试;备用方案;应急预案</td>
+                <td>快速响应;技术支持;临时降级</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>团队能力退化,过度依赖 AI</td>
+                <td>中</td>
+                <td>中</td>
+                <td>强调 AI 辅助定位;定期技能考核</td>
+                <td>调整规则;增加人工决策环节</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 8. 推广总结与下一步 -->
+    <section class="section" id="summary">
+        <h2>八、推广总结与下一步</h2>
+        
+        <h3>8.1 推广成果总结</h3>
+        <p class="hint">推广期结束后,总结关键成果与经验。</p>
+        <div class="field-value" style="min-height:80px;">
+            [示例：全公司 8 个 BU 全部完成接入,120 人通过培训认证,AI Coding 日活率达 85%,研发效率提升 22%,线上缺陷率下降 18%,沉淀企业级规范 25 份。]
+        </div>
+
+        <h3>8.2 关键经验与教训</h3>
+        <p class="hint">哪些做法特别有效？哪些问题需要在下一阶段改进？</p>
+        <div class="field-value" style="min-height:80px;"></div>
+
+        <h3>8.3 进入成熟运营阶段的准备</h3>
+        <p class="hint">勾选进入成熟阶段的必要条件。</p>
+        <ul class="hint">
+            <li>□ 所有 BU 已完成接入,使用率 ≥ 80%</li>
+            <li>□ 企业级规范体系已建立并稳定运行</li>
+            <li>□ 培训与支持体系完善,问题响应及时</li>
+            <li>□ 度量体系完善,关键指标持续改善</li>
+            <li>□ 风险管理机制有效,未发生重大事故</li>
+            <li>□ 知识库与社区活跃,最佳实践持续沉淀</li>
+        </ul>
+        <div class="field-value" style="min-height:60px;"></div>
+    </section>
+</div>
+</body>
+</html>

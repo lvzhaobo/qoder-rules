@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coding全指标监控看板 (42个指标)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #c9d1d9; }
+        .bg-gh-card { background-color: #161b22; }
+        .bg-gh-header { background-color: #010409; }
+        .border-gh { border-color: #30363d; }
+        .text-gh-muted { color: #8b949e; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        .chart-container { height: 350px; width: 100%; }
+        .metric-card { transition: all 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .metric-id { 
+            background-color: #1f6feb; 
+            color: white; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-size: 0.75rem; 
+            font-weight: bold;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-gh-header border-r border-gh flex flex-col flex-shrink-0 z-20">
+            <div class="p-5 flex items-center gap-3 border-b border-gh">
+                <i class="fa-brands fa-github text-3xl text-white"></i>
+                <div>
+                    <div class="font-bold text-white text-lg">AI Coding 指标</div>
+                    <div class="text-xs text-gh-muted">企业全景监控 (42项)</div>
+                </div>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <div v-for="category in categories" :key="category.id">
+                    <div class="px-3 py-2 text-xs font-bold text-gh-muted uppercase tracking-wider mb-1">
+                        {{ category.name }}
+                    </div>
+                    <a href="#" @click.prevent="currentView = category.id"
+                       class="flex items-center gap-3 px-3 py-2 rounded-md transition mb-1"
+                       :class="currentView === category.id ? 'bg-[#1f6feb] text-white' : 'text-gh-muted hover:text-white hover:bg-gh-card'">
+                        <i :class="category.icon + ' w-5 text-center'"></i>
+                        <span class="text-sm font-medium">{{ category.label }}</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="p-4 border-t border-gh bg-[#161b22]">
+                <div class="text-xs text-gh-muted mb-2"><span class="metric-id">#7</span> 活跃用户总数</div>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-2xl font-bold text-white">{{ formatNumber(metrics.totalActiveUsers) }}</span>
+                    <span class="text-green-400 text-xs"><i class="fa-solid fa-arrow-up"></i> 12%</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-[#0d1117]">
+            <header class="bg-gh-header border-b border-gh px-8 py-4 flex justify-between items-center shadow-md">
+                <div>
+                    <h1 class="text-xl font-bold text-white">{{ categories.find(c => c.id === currentView).label }}</h1>
+                    <p class="text-xs text-gh-muted mt-1">{{ categories.find(c => c.id === currentView).desc }}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-gh-muted bg-gh-card px-3 py-1.5 rounded border border-gh">
+                        <i class="fa-regular fa-calendar mr-2"></i> 最近 28 天
+                    </div>
+                    <button class="bg-[#238636] hover:bg-[#2ea043] text-white px-4 py-1.5 rounded-md text-sm font-medium transition shadow-sm border border-[rgba(240,246,252,0.1)] flex items-center">
+                        <i class="fa-solid fa-download mr-2"></i> 导出报告
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-auto p-8 custom-scroll">
+                
+                <!-- 1. Usage Dashboard Metrics View -->
+                <div v-show="currentView === 'usage'" class="space-y-6">
+                    <!-- Top KPIs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <metric-card id="1" title="Agent 采用率" :value="metrics.agentAdoption + '%'" icon="fa-robot" trend="+5.2%" sub="尝试过 Agent 功能的用户占比"></metric-card>
+                        <metric-card id="2" title="人均 Chat 请求数" :value="metrics.avgChatRequests" icon="fa-comments" sub="每位活跃用户的平均请求"></metric-card>
+                        <metric-card id="4" title="代码采纳率" :value="metrics.acceptanceRate + '%'" icon="fa-check-double" sub="建议被接受的百分比"></metric-card>
+                        <metric-card id="7" title="活跃用户总数" :value="formatNumber(metrics.totalActiveUsers)" icon="fa-users" sub="本月活跃的授权用户"></metric-card>
+                    </div>
+
+                    <!-- Row 1 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+                                <span class="metric-id">#5,6</span> 活跃用户趋势 (日活/周活)
+                            </h3>
+                            <div id="chart_users" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#8</span> 语言使用分布
+                            </h3>
+                            <div id="chart_lang_pie" class="chart-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#15</span> 各 Chat 模式请求数
+                            </h3>
+                            <div id="chart_chat_modes" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#11</span> 每日模型使用情况
+                            </h3>
+                            <div id="chart_model_daily" class="chart-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Metrics Grid -->
+                    <div class="bg-gh-card border border-gh rounded-lg p-5">
+                        <h3 class="text-white font-semibold mb-4 border-b border-gh pb-2">详细使用指标</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div>
+                                <h4 class="text-sm font-medium text-gh-muted mb-2"><span class="metric-id">#14</span> 最常用 Chat 模型</h4>
+                                <div class="text-xl font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-crown text-yellow-500"></i> GPT-4
+                                </div>
+                                <div class="mt-4">
+                                    <h4 class="text-sm font-medium text-gh-muted mb-2"><span class="metric-id">#10</span> 模型使用分布 (总体)</h4>
+                                    <div class="text-sm text-white">GPT-4: 65% | Claude 3.5: 35%</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gh-muted mb-2"><span class="metric-id">#3</span> 代码补全统计</h4>
+                                <div class="flex justify-between items-center text-sm mb-1">
+                                    <span>建议总数:</span> <span class="text-white font-mono">{{ formatNumber(metrics.completionsSuggested) }}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span>接受总数:</span> <span class="text-green-400 font-mono">{{ formatNumber(metrics.completionsAccepted) }}</span>
+                                </div>
+                                <div class="mt-4">
+                                     <h4 class="text-sm font-medium text-gh-muted mb-2"><span class="metric-id">#12</span> 各模式模型使用情况</h4>
+                                     <div class="text-xs text-gh-muted">Ask: GPT-4 主导<br>Edit: Claude 3.5 上升</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gh-muted mb-2"><span class="metric-id">#13</span> 各语言模型偏好</h4>
+                                <div class="h-48" id="chart_model_lang_mini"></div>
+                                <div class="mt-4">
+                                     <h4 class="text-sm font-medium text-gh-muted mb-2"><span class="metric-id">#9</span> 每日语言活跃度</h4>
+                                     <div class="h-32" id="chart_lang_daily_mini"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Code Generation Metrics View -->
+                <div v-show="currentView === 'codegen'" class="space-y-6">
+                    <!-- KPIs -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <metric-card id="1" title="AI 辅助代码变更行数" :value="formatNumber(metrics.locChangedAI)" icon="fa-code-branch" sub="添加 + 删除总量"></metric-card>
+                        <metric-card id="2" title="Agent 贡献率" :value="metrics.agentContribution + '%'" icon="fa-microchip" sub="占总变更的百分比"></metric-card>
+                        <metric-card id="3" title="Agent 平均删除行数" :value="metrics.avgLinesDeletedAgent" icon="fa-eraser" sub="每用户平均由 Agent 删除"></metric-card>
+                    </div>
+
+                    <!-- Totals -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <metric-card id="5" title="用户发起的代码变更" :value="formatNumber(metrics.userInitiatedCodeChanges)" icon="fa-user" sub="手动采纳建议/编辑"></metric-card>
+                        <metric-card id="6" title="Agent 发起的代码变更" :value="formatNumber(metrics.agentInitiatedCodeChanges)" icon="fa-robot" sub="自动化操作"></metric-card>
+                    </div>
+
+                    <!-- LoC Trends -->
+                    <div class="bg-gh-card border border-gh rounded-lg p-5">
+                        <h3 class="text-white font-semibold mb-4">
+                            <span class="metric-id">#4</span> 每日代码添加与删除总量
+                        </h3>
+                        <div id="chart_loc_daily" class="chart-container" style="height: 400px;"></div>
+                    </div>
+
+                    <!-- Breakdown by Source (User vs Agent) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#9,10</span> 各语言代码变更 (用户 vs Agent)
+                            </h3>
+                            <div id="chart_loc_lang_source" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#7,8</span> 各模型代码变更 (用户 vs Agent)
+                            </h3>
+                            <div id="chart_loc_model_source" class="chart-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. API & Export Fields View -->
+                <div v-show="currentView === 'api'" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <metric-card id="2" title="用户主动交互数" :value="formatNumber(metrics.userInitiatedInteractions)" icon="fa-hand-pointer" sub="显式 Prompt 数量"></metric-card>
+                        <metric-card id="3" title="代码生成活动数" :value="formatNumber(metrics.codeGenActivityCount)" icon="fa-bolt" sub="生成事件总量"></metric-card>
+                        <metric-card id="4" title="代码采纳活动数" :value="formatNumber(metrics.codeAcceptanceCount)" icon="fa-check-circle" sub="显式采纳操作"></metric-card>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                         <div class="bg-gh-card border border-gh rounded p-3">
+                            <div class="text-xs text-gh-muted mb-1"><span class="metric-id">#5</span> 建议添加行数 (Suggested Add)</div>
+                            <div class="font-bold text-white">{{ formatNumber(metrics.locSuggestedAdd) }}</div>
+                         </div>
+                         <div class="bg-gh-card border border-gh rounded p-3">
+                            <div class="text-xs text-gh-muted mb-1"><span class="metric-id">#6</span> 建议删除行数 (Suggested Del)</div>
+                            <div class="font-bold text-white">{{ formatNumber(metrics.locSuggestedDel) }}</div>
+                         </div>
+                         <div class="bg-gh-card border border-gh rounded p-3">
+                            <div class="text-xs text-gh-muted mb-1"><span class="metric-id">#7</span> 实际添加行数 (Added Sum)</div>
+                            <div class="font-bold text-white">{{ formatNumber(metrics.locAddedSum) }}</div>
+                         </div>
+                         <div class="bg-gh-card border border-gh rounded p-3">
+                            <div class="text-xs text-gh-muted mb-1"><span class="metric-id">#8</span> 实际删除行数 (Deleted Sum)</div>
+                            <div class="font-bold text-white">{{ formatNumber(metrics.locDeletedSum) }}</div>
+                         </div>
+                         <div class="bg-gh-card border border-gh rounded p-3">
+                            <div class="text-xs text-gh-muted mb-1"><span class="metric-id">#1</span> Agent 编辑数 (Agent Edit)</div>
+                            <div class="font-bold text-white">{{ formatNumber(metrics.agentEditCount) }}</div>
+                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#9</span> 按 IDE 分布 (Totals by IDE)
+                            </h3>
+                            <div id="chart_ide_dist" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#10</span> 按功能分布 (Totals by Feature)
+                            </h3>
+                            <div id="chart_feature_usage" class="chart-container"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#11</span> 语言与功能交叉分析
+                            </h3>
+                            <div id="chart_lang_feature" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#12</span> 模型与功能交叉分析
+                            </h3>
+                            <div id="chart_model_feature" class="chart-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- Client Version Table -->
+                    <div class="bg-gh-card border border-gh rounded-lg overflow-hidden">
+                        <div class="px-5 py-4 border-b border-gh bg-gh-header">
+                            <h3 class="text-white font-semibold">
+                                <span class="metric-id">#13</span> 客户端版本详情 (最后已知版本)
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="text-gh-muted bg-[#161b22]">
+                                    <tr>
+                                        <th class="px-5 py-3 font-medium">用户登录名</th>
+                                        <th class="px-5 py-3 font-medium">最后使用的 IDE</th>
+                                        <th class="px-5 py-3 font-medium">IDE 版本</th>
+                                        <th class="px-5 py-3 font-medium">插件版本</th>
+                                        <th class="px-5 py-3 font-medium text-right">最后活跃</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gh text-gray-300">
+                                    <tr v-for="user in userVersions" :key="user.login" class="hover:bg-[#1c2128]">
+                                        <td class="px-5 py-3 font-mono text-xs">{{ user.login }}</td>
+                                        <td class="px-5 py-3">{{ user.ide }}</td>
+                                        <td class="px-5 py-3 text-gh-muted">{{ user.ideVersion }}</td>
+                                        <td class="px-5 py-3 text-gh-muted">{{ user.pluginVersion }}</td>
+                                        <td class="px-5 py-3 text-right">{{ user.lastActive }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. PR Activity View -->
+                <div v-show="currentView === 'pr'" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <metric-card id="1" title="PR 创建总数" :value="metrics.prTotalCreated" icon="fa-code-pull-request"></metric-card>
+                        <metric-card id="3" title="AI Coding 创建的 PR" :value="metrics.prCreatedByAI Coding" icon="fa-robot" :sub="((metrics.prCreatedByAI Coding/metrics.prTotalCreated)*100).toFixed(1) + '% 占比'"></metric-card>
+                        <metric-card id="2" title="PR 审查总数" :value="metrics.prTotalReviewed" icon="fa-glasses"></metric-card>
+                        <metric-card id="4" title="AI Coding 审查的 PR" :value="metrics.prReviewedByAI Coding" icon="fa-robot" :sub="((metrics.prReviewedByAI Coding/metrics.prTotalReviewed)*100).toFixed(1) + '% 占比'"></metric-card>
+                    </div>
+
+                    <div class="bg-gh-card border border-gh rounded-lg p-5">
+                        <h3 class="text-white font-semibold mb-4">PR 活动趋势 (创建 vs 审查)</h3>
+                        <div id="chart_pr_trend" class="chart-container" style="height: 400px;"></div>
+                    </div>
+                </div>
+
+                <!-- 5. Engagement Deep Dive (from 2.txt) -->
+                <div v-show="currentView === 'engagement'" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <metric-card id="1" title="DAU / WAU 比率" :value="metrics.dauWauRatio + '%'" icon="fa-chart-line" sub="用户粘性指标 (>60% 为健康)"></metric-card>
+                        <metric-card id="3" title="代码补全接受率" :value="metrics.acceptanceRate + '%'" icon="fa-thumbs-up" trend="+2.1%" sub="信任度指标 (信任上升)"></metric-card>
+                        <metric-card id="5" title="Agent 采用深度" :value="metrics.agentAdoption + '%'" icon="fa-robot" sub="高级功能渗透率"></metric-card>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#4</span> 各 Chat 模式请求分布 (Ask/Edit/Agent)
+                            </h3>
+                            <div id="chart_chat_mode_pie" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#7</span> 各模式模型偏好 (Model by Mode)
+                            </h3>
+                            <div id="chart_mode_model_stack" class="chart-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gh-card border border-gh rounded-lg p-5">
+                        <h3 class="text-white font-semibold mb-4 border-b border-gh pb-2">指标洞察 (来自 2.txt)</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="flex gap-3">
+                                <i class="fa-solid fa-info-circle text-blue-400 mt-1"></i>
+                                <div>
+                                    <strong class="text-white">DAU (每日活跃用户):</strong> 
+                                    <p class="text-gh-muted mt-1">持续 DAU 增长表明参与一致；急剧下降可能表示配置问题或兴趣降低。</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <i class="fa-solid fa-info-circle text-blue-400 mt-1"></i>
+                                <div>
+                                    <strong class="text-white">WAU (每周活跃用户):</strong> 
+                                    <p class="text-gh-muted mt-1">WAU 与许可证比例 (>60%) 正常，表明持续使用率很高。</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <i class="fa-solid fa-info-circle text-blue-400 mt-1"></i>
+                                <div>
+                                    <strong class="text-white">每个聊天模式的请求数:</strong> 
+                                    <p class="text-gh-muted mt-1">均衡分布表明用户正在探索多个功能。大量使用一种模式可以突出显示支持活动应集中关注的领域。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Data Quality & Definitions (from 3.txt) -->
+                <div v-show="currentView === 'data_quality'" class="space-y-6">
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <metric-card id="5" title="未知语言事件" :value="metrics.unknownLanguageEvents" icon="fa-question" sub="无法识别文件类型"></metric-card>
+                        <metric-card id="5" title="未知功能事件" :value="metrics.unknownFeatureEvents" icon="fa-bug" sub="旧版客户端泛型事件"></metric-card>
+                        <metric-card id="1" title="数据完整度" value="98.5%" icon="fa-shield-halved" sub="有效分类事件占比"></metric-card>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#5</span> 未知数据分布 (Unknown Breakdown)
+                            </h3>
+                            <div id="chart_unknown_breakdown" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4 border-b border-gh pb-2">关键定义 (来自 3.txt)</h3>
+                            <div class="space-y-6 text-sm">
+                                <div>
+                                    <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+                                        <i class="fa-solid fa-user-check text-green-400"></i> 1. 活动用户 (Active Users)
+                                    </h4>
+                                    <p class="text-gh-muted pl-6">
+                                        定义：每日/每周/每月与 AI Coding 进行交互的用户。<br>
+                                        判定：<code class="bg-gray-800 px-1 rounded">user_initiated_interaction_count > 0</code><br>
+                                        注释：如果用户当天在 IDE 中与 AI Coding 交互，则被视为活动。
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+                                        <i class="fa-solid fa-calculator text-blue-400"></i> 2. 接受率 (Acceptance Rate)
+                                    </h4>
+                                    <p class="text-gh-muted pl-6">
+                                        计算公式：<code class="bg-gray-800 px-1 rounded">code_acceptance_activity_count ÷ code_generation_activity_count</code><br>
+                                        注释：两个源都以相同的方式计算接受率，尽管舍入可能有所不同。
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+                                        <i class="fa-solid fa-robot text-purple-400"></i> 3. 代理采用 (Agent Adoption)
+                                    </h4>
+                                    <p class="text-gh-muted pl-6">
+                                        定义：活跃用户中使用 AI Coding 代理的百分比。<br>
+                                        判定：<code class="bg-gray-800 px-1 rounded">totals_by_feature</code> 当 feature = "agent" 时。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. LoC Deep Dive (from 4.txt) -->
+                <div v-show="currentView === 'loc_deep'" class="space-y-6">
+                    <!-- Funnel Visualization -->
+                    <div class="bg-gh-card border border-gh rounded-lg p-5">
+                        <h3 class="text-white font-semibold mb-4">
+                            <span class="metric-id">#1-4</span> 代码建议与采纳漏斗
+                        </h3>
+                        <div id="chart_loc_funnel" class="chart-container" style="height: 400px;"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">#2,3</span> Agent 编辑详情 (Added vs Deleted)
+                            </h3>
+                            <div id="chart_agent_loc_detail" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4 border-b border-gh pb-2">代码行指标说明 (来自 4.txt)</h3>
+                            <div class="space-y-4 text-sm overflow-y-auto h-[300px] custom-scroll pr-2">
+                                <div class="p-3 bg-[#1f242c] rounded border border-gh">
+                                    <strong class="text-white block mb-1">建议添加 (loc_suggested_to_add_sum)</strong>
+                                    <p class="text-gh-muted text-xs">AI Coding 在补全、聊天和代理功能中建议添加的代码行数。代理模式下，当可见代码块显示在聊天面板中时计数。</p>
+                                </div>
+                                <div class="p-3 bg-[#1f242c] rounded border border-gh">
+                                    <strong class="text-white block mb-1">实际添加 (loc_added_sum)</strong>
+                                    <p class="text-gh-muted text-xs">用户实际接受或 AI Coding 代理直接编辑添加到文件中的代码行数。包括文件中的代理编辑（归类于 agent_edit 功能）。</p>
+                                </div>
+                                <div class="p-3 bg-[#1f242c] rounded border border-gh">
+                                    <strong class="text-white block mb-1">实际删除 (loc_deleted_sum)</strong>
+                                    <p class="text-gh-muted text-xs">通过 AI Coding 建议或代理编辑删除的代码行数。包括文件中的代理编辑。</p>
+                                </div>
+                                <div class="p-3 bg-[#1f242c] rounded border border-gh">
+                                    <strong class="text-white block mb-1">代码生成活动计数 (code_generation_activity_count)</strong>
+                                    <p class="text-gh-muted text-xs">生成代码的活动次数。在单次代理编辑中可能为 1。</p>
+                                </div>
+                                <div class="p-3 border border-yellow-800 bg-yellow-900/20 rounded">
+                                    <strong class="text-yellow-400 block mb-1"><i class="fa-solid fa-triangle-exclamation"></i> 代理模式差异</strong>
+                                    <p class="text-yellow-100/70 text-xs">代理不遵循传统的“建议然后接受”流程，而是直接规划和执行多步骤任务，通常涉及多文件编辑。因此代码接受活动计数在某些代理场景下可能为 0。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Enterprise Governance View -->
+                <div v-show="currentView === 'enterprise'" class="space-y-6">
+                    <!-- Top KPIs -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <metric-card id="1" title="ROI 投资回报率" :value="metrics.roiMultiplier + 'x'" icon="fa-sack-dollar" sub="每投入1元产生的价值" trend="+0.4x"></metric-card>
+                        <metric-card id="2" title="License 利用率" :value="metrics.licenseUtilization + '%'" icon="fa-id-card" sub="活跃席位/购买席位"></metric-card>
+                        <metric-card id="3" title="安全拦截率" :value="metrics.securityBlockRate + '%'" icon="fa-shield-virus" sub="敏感信息或不安全代码"></metric-card>
+                        <metric-card id="4" title="合规性评分" :value="metrics.complianceScore" icon="fa-clipboard-check" sub="基于企业策略 (满分100)"></metric-card>
+                    </div>
+
+                    <!-- Row 1: ROI & Cost -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">ROI</span> 成本投入 vs 价值产出趋势
+                            </h3>
+                            <div id="chart_roi_trend" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                             <h3 class="text-white font-semibold mb-4">本月预估节省</h3>
+                             <div class="flex flex-col gap-6 justify-center h-[300px]">
+                                 <div class="text-center">
+                                     <div class="text-gh-muted text-sm mb-1">节省工时</div>
+                                     <div class="text-4xl font-bold text-green-400">{{ formatNumber(metrics.hoursSaved) }} h</div>
+                                 </div>
+                                 <div class="text-center">
+                                     <div class="text-gh-muted text-sm mb-1">节省成本 (估算)</div>
+                                     <div class="text-4xl font-bold text-blue-400">${{ formatNumber(metrics.costSavings) }}</div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Adoption & Security -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">Team</span> 各部门 AI Coding 活跃渗透率
+                            </h3>
+                            <div id="chart_dept_adoption" class="chart-container"></div>
+                        </div>
+                        <div class="bg-gh-card border border-gh rounded-lg p-5">
+                            <h3 class="text-white font-semibold mb-4">
+                                <span class="metric-id">Sec</span> 安全与合规事件分布
+                            </h3>
+                            <div id="chart_security_events" class="chart-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Vue Component Template for Metric Card -->
+    <template id="metric-card-template">
+        <div class="bg-gh-card border border-gh rounded-lg p-5 metric-card relative overflow-hidden">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-sm font-medium text-gh-muted z-10 flex items-center">
+                    <span v-if="id" class="metric-id">#{{ id }}</span>
+                    {{ title }}
+                </h3>
+                <div class="w-8 h-8 rounded bg-[#1f242c] flex items-center justify-center text-gh-muted z-10">
+                    <i :class="'fa-solid ' + icon"></i>
+                </div>
+            </div>
+            <div class="flex items-baseline gap-2 z-10 relative">
+                <span class="text-2xl font-bold text-white">{{ value }}</span>
+                <span v-if="trend" class="text-xs text-green-400">{{ trend }}</span>
+            </div>
+            <div v-if="sub" class="mt-2 text-xs text-gh-muted z-10 relative">{{ sub }}</div>
+            <!-- Decorative Background Element -->
+            <div class="absolute -bottom-4 -right-4 text-[4rem] text-[#1f242c] opacity-50 pointer-events-none">
+                <i :class="'fa-solid ' + icon"></i>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        const { createApp, ref, onMounted, nextTick, watch } = Vue;
+
+        const MetricCard = {
+            props: ['id', 'title', 'value', 'icon', 'trend', 'sub'],
+            template: '#metric-card-template'
+        };
+
+        createApp({
+            components: { MetricCard },
+            setup() {
+                const currentView = ref('usage');
+                const categories = [
+                    { id: 'usage', name: '1. 使用情况看板 (15项)', label: '使用情况概览', icon: 'fa-chart-pie', desc: '核心采用与参与度指标' },
+                    { id: 'codegen', name: '2. 代码生成看板 (10项)', label: '代码生成分析', icon: 'fa-code', desc: '代码行数影响与 Agent 贡献' },
+                    { id: 'api', name: '3. API 与导出字段 (13项)', label: 'API 与导出详情', icon: 'fa-database', desc: 'IDE 与交互的细粒度数据' },
+                    { id: 'pr', name: '4. PR 活动字段 (4项)', label: 'PR 活动分析', icon: 'fa-code-pull-request', desc: 'PR 创建与审查的自动化' },
+                    { id: 'engagement', name: '5. 参与度分析 (2.txt)', label: '用户参与度深度分析', icon: 'fa-chart-line', desc: 'DAU/WAU、聊天模式与模型偏好' },
+                    { id: 'data_quality', name: '6. 数据定义 (3.txt)', label: '指标定义与数据质量', icon: 'fa-file-circle-question', desc: '活跃用户定义、接受率公式与未知数据' },
+                    { id: 'loc_deep', name: '7. 代码行分析 (4.txt)', label: '代码行(LoC)深度透视', icon: 'fa-file-code', desc: '建议与采纳漏斗、Agent 编辑详情' },
+                    { id: 'enterprise', name: '8. 企业级治理 (50+团队)', label: '企业级 ROI 与合规治理', icon: 'fa-building-shield', desc: '成本效益、许可证利用率与安全拦截' }
+                ];
+
+                // --- MOCK DATA GENERATION ---
+                // Covering all 42 metrics from AI Coding-1.md + Enterprise Metrics
+                const metrics = ref({
+                    // Usage
+                    totalActiveUsers: 845,
+                    agentAdoption: 42.5,
+                    avgChatRequests: 18.2,
+                    acceptanceRate: 31.8,
+                    completionsSuggested: 154000,
+                    completionsAccepted: 48972,
+                    // Code Gen
+                    locChangedAI: 520000,
+                    agentContribution: 28.5,
+                    avgLinesDeletedAgent: 145,
+                    aiCodeImpact: 45.2,
+                    userInitiatedCodeChanges: 350000,
+                    agentInitiatedCodeChanges: 170000,
+                    // API Fields
+                    userInitiatedInteractions: 24500,
+                    codeGenActivityCount: 89000,
+                    codeAcceptanceCount: 32000,
+                    locSuggestedAdd: 600000,
+                    locSuggestedDel: 80000,
+                    locAddedSum: 480000,
+                    locDeletedSum: 40000,
+                    agentEditCount: 12500,
+                    // PR Fields
+                    prTotalCreated: 340,
+                    prTotalReviewed: 310,
+                    prCreatedByAI Coding: 45,
+                    prReviewedByAI Coding: 180,
+                    // New Metrics for tabs
+                    dauWauRatio: 57.7,
+                    unknownLanguageEvents: 120,
+                    unknownFeatureEvents: 45,
+                    // Enterprise Metrics
+                    roiMultiplier: 3.8,
+                    licenseUtilization: 88.5,
+                    securityBlockRate: 0.12,
+                    complianceScore: 96,
+                    costSavings: 450000,
+                    hoursSaved: 12500
+                });
+
+                const userVersions = ref([
+                    { login: 'dev_sarah', ide: 'VS Code', ideVersion: '1.85.1', pluginVersion: 'v1.144.0', lastActive: '2h ago' },
+                    { login: 'eng_mike', ide: 'JetBrains IntelliJ', ideVersion: '2023.3.2', pluginVersion: '1.4.15', lastActive: '5h ago' },
+                    { login: 'lead_jess', ide: 'Visual Studio', ideVersion: '17.9.0', pluginVersion: '1.144.0', lastActive: '1d ago' },
+                    { login: 'arch_david', ide: 'VS Code', ideVersion: '1.86.0', pluginVersion: 'v1.145.0', lastActive: '4h ago' },
+                    { login: 'sec_admin_lisa', ide: 'N/A (Dashboard)', ideVersion: '-', pluginVersion: '-', lastActive: '10m ago' },
+                    { login: 'platform_eric', ide: 'JetBrains IntelliJ', ideVersion: '2023.3.3', pluginVersion: '1.4.16', lastActive: '1h ago' },
+                    { login: 'qa_rachel', ide: 'VS Code', ideVersion: '1.85.2', pluginVersion: 'v1.144.0', lastActive: '30m ago' },
+                    { login: 'intern_tom', ide: 'VS Code', ideVersion: '1.84.0', pluginVersion: 'v1.138.0', lastActive: '3d ago' },
+                    { login: 'mobile_alex', ide: 'Android Studio', ideVersion: '2023.1.1', pluginVersion: '1.4.12', lastActive: 'Just now' }
+                ]);
+
+                // Dates for charts
+                const dates = Array.from({length: 14}, (_, i) => `10月 ${i + 1}日`);
+                const themeColors = {
+                    blue: '#1f6feb', green: '#238636', purple: '#a371f7', orange: '#f78166',
+                    yellow: '#d29922', red: '#da3633', gray: '#8b949e', dark: '#0d1117'
+                };
+                const gridColor = '#30363d';
+                const textColor = '#c9d1d9';
+
+                // Chart Init Helper
+                const initChart = (id, option) => {
+                    const dom = document.getElementById(id);
+                    if (!dom) return;
+                    const chart = echarts.init(dom);
+                    chart.setOption(option);
+                    return chart;
+                };
+
+                // --- CHART OPTIONS ---
+
+                const getChartOptions = () => {
+                    return {
+                        users: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            grid: { left: '3%', right: '4%', bottom: '10%', top: '5%', containLabel: true },
+                            xAxis: { type: 'category', data: dates, axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '日活跃用户 (DAU)', type: 'line', data: dates.map(() => Math.floor(Math.random()*100 + 400)), itemStyle: { color: themeColors.green } },
+                                { name: '周活跃用户 (WAU)', type: 'line', data: dates.map(() => Math.floor(Math.random()*50 + 700)), itemStyle: { color: themeColors.blue } }
+                            ]
+                        },
+                        langPie: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'item' },
+                            legend: { orient: 'vertical', left: 'left', textStyle: { color: textColor } },
+                            series: [{
+                                type: 'pie', radius: ['40%', '70%'], center: ['60%', '50%'],
+                                itemStyle: { borderRadius: 5, borderColor: themeColors.dark, borderWidth: 2 },
+                                data: [
+                                    { value: 400, name: 'Python', itemStyle: { color: '#3572A5' } },
+                                    { value: 300, name: 'TypeScript', itemStyle: { color: '#2b7489' } },
+                                    { value: 200, name: 'Java', itemStyle: { color: '#b07219' } },
+                                    { value: 100, name: 'Go', itemStyle: { color: '#00ADD8' } }
+                                ]
+                            }]
+                        },
+                        chatModes: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'value', splitLine: { show: false } },
+                            yAxis: { type: 'category', data: ['Agent (代理)', 'Edit (编辑)', 'Ask (问答)'], axisLabel: { color: textColor } },
+                            grid: { left: '3%', right: '4%', bottom: '10%', top: '5%', containLabel: true },
+                            series: [{
+                                name: '请求数', type: 'bar',
+                                data: [
+                                    { value: 1200, itemStyle: { color: themeColors.orange } },
+                                    { value: 2500, itemStyle: { color: themeColors.purple } },
+                                    { value: 5800, itemStyle: { color: themeColors.blue } }
+                                ]
+                            }]
+                        },
+                        modelDaily: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: dates, axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            grid: { left: '3%', right: '4%', bottom: '10%', top: '5%', containLabel: true },
+                            series: [
+                                { name: 'GPT-4', type: 'bar', stack: 'total', data: dates.map(()=>Math.random()*500+200), itemStyle: { color: themeColors.green } },
+                                { name: 'Claude 3.5', type: 'bar', stack: 'total', data: dates.map(()=>Math.random()*300+100), itemStyle: { color: themeColors.purple } }
+                            ]
+                        },
+                        locDaily: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: dates, axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            grid: { left: '3%', right: '4%', bottom: '10%', top: '5%', containLabel: true },
+                            series: [
+                                { name: '添加行数', type: 'bar', data: dates.map(()=>Math.random()*2000+1000), itemStyle: { color: themeColors.green } },
+                                { name: '删除行数', type: 'bar', data: dates.map(()=>-(Math.random()*500+200)), itemStyle: { color: themeColors.red } }
+                            ]
+                        },
+                        locLangSource: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: ['Python', 'TS', 'Java', 'Go'], axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '用户发起', type: 'bar', stack: 'total', data: [5000, 4500, 3000, 2000], itemStyle: { color: themeColors.blue } },
+                                { name: 'Agent 发起', type: 'bar', stack: 'total', data: [2000, 1500, 1000, 800], itemStyle: { color: themeColors.orange } }
+                            ]
+                        },
+                        locModelSource: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: ['GPT-4', 'Claude 3.5'], axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '用户发起', type: 'bar', stack: 'total', data: [8000, 4000], itemStyle: { color: themeColors.blue } },
+                                { name: 'Agent 发起', type: 'bar', stack: 'total', data: [3500, 2500], itemStyle: { color: themeColors.orange } }
+                            ]
+                        },
+                        ideDist: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'item' },
+                            legend: { orient: 'vertical', left: 'left', textStyle: { color: textColor } },
+                            series: [{
+                                type: 'pie', radius: ['40%', '70%'], center: ['60%', '50%'],
+                                itemStyle: { borderRadius: 5, borderColor: themeColors.dark, borderWidth: 2 },
+                                data: [
+                                    { value: 500, name: 'VS Code', itemStyle: { color: '#007acc' } },
+                                    { value: 200, name: 'Visual Studio', itemStyle: { color: '#5c2d91' } },
+                                    { value: 100, name: 'JetBrains', itemStyle: { color: '#000000' } },
+                                    { value: 45, name: 'Xcode', itemStyle: { color: '#1575f9' } }
+                                ]
+                            }]
+                        },
+                        featureUsage: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            xAxis: { type: 'category', data: ['代码补全', '聊天面板', '行内聊天'], axisLabel: { color: textColor } },
+                            yAxis: { type: 'value', splitLine: { show: false } },
+                            series: [{
+                                type: 'bar', data: [150000, 45000, 28000],
+                                itemStyle: { color: function(p) { return [themeColors.blue, themeColors.purple, themeColors.green][p.dataIndex] } }
+                            }]
+                        },
+                        langFeature: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: ['Python', 'TS', 'Java'], axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '代码补全', type: 'bar', stack: 'total', data: [8000, 6000, 4000], itemStyle: { color: themeColors.blue } },
+                                { name: '聊天', type: 'bar', stack: 'total', data: [3000, 4000, 1500], itemStyle: { color: themeColors.purple } }
+                            ]
+                        },
+                        modelFeature: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: ['GPT-4', 'Claude 3.5'], axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '聊天', type: 'bar', stack: 'total', data: [12000, 8000], itemStyle: { color: themeColors.green } },
+                                { name: '行内', type: 'bar', stack: 'total', data: [5000, 6000], itemStyle: { color: themeColors.orange } }
+                            ]
+                        },
+                        // Mini Charts for Overview
+                        modelLangMini: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            grid: { left: 0, right: 0, top: 0, bottom: 0 },
+                            xAxis: { type: 'value', show: false },
+                            yAxis: { type: 'category', data: ['Python', 'TS', 'Java'], axisLine: { show: false }, axisLabel: { color: textColor, fontSize: 10, inside: true } },
+                            series: [
+                                { name: 'GPT-4', type: 'bar', stack: 'total', data: [65, 55, 40], itemStyle: { color: themeColors.green } },
+                                { name: 'Claude 3.5', type: 'bar', stack: 'total', data: [35, 45, 60], itemStyle: { color: themeColors.purple } }
+                            ]
+                        },
+                        langDailyMini: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            grid: { left: 0, right: 0, top: 0, bottom: 0 },
+                            xAxis: { type: 'category', show: false, data: dates },
+                            yAxis: { type: 'value', show: false },
+                            series: [
+                                { name: 'Python', type: 'line', showSymbol: false, data: dates.map(()=>Math.random()*50+50), itemStyle: { color: '#3572A5' }, areaStyle: { opacity: 0.2 } },
+                                { name: 'TS', type: 'line', showSymbol: false, data: dates.map(()=>Math.random()*40+40), itemStyle: { color: '#2b7489' }, areaStyle: { opacity: 0.2 } },
+                                { name: 'Java', type: 'line', showSymbol: false, data: dates.map(()=>Math.random()*30+20), itemStyle: { color: '#b07219' }, areaStyle: { opacity: 0.2 } }
+                            ]
+                        },
+                        prTrend: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: dates, axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '创建数', type: 'bar', data: dates.map(()=>Math.floor(Math.random()*20+10)), itemStyle: { color: themeColors.green } },
+                                { name: '审查数', type: 'line', data: dates.map(()=>Math.floor(Math.random()*20+10)), itemStyle: { color: themeColors.blue } }
+                            ]
+                        },
+                        // New Charts for Tab 5 (Engagement)
+                        chatModePie: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'item' },
+                            legend: { orient: 'vertical', left: 'left', textStyle: { color: textColor } },
+                            series: [{
+                                type: 'pie', radius: ['40%', '70%'], center: ['60%', '50%'],
+                                itemStyle: { borderRadius: 5, borderColor: themeColors.dark, borderWidth: 2 },
+                                data: [
+                                    { value: 5800, name: 'Ask (问答)', itemStyle: { color: themeColors.blue } },
+                                    { value: 2500, name: 'Edit (编辑)', itemStyle: { color: themeColors.purple } },
+                                    { value: 1200, name: 'Agent (代理)', itemStyle: { color: themeColors.orange } }
+                                ]
+                            }]
+                        },
+                        modeModelStack: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: ['Ask', 'Edit', 'Agent'], axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: 'GPT-4', type: 'bar', stack: 'total', data: [4500, 1000, 800], itemStyle: { color: themeColors.green } },
+                                { name: 'Claude 3.5', type: 'bar', stack: 'total', data: [1300, 1500, 400], itemStyle: { color: themeColors.purple } }
+                            ]
+                        },
+                        // New Charts for Tab 6 (Data Quality)
+                        unknownBreakdown: {
+                             backgroundColor: 'transparent',
+                             tooltip: { trigger: 'item' },
+                             series: [{
+                                type: 'pie', radius: '60%',
+                                data: [
+                                    { value: 14835, name: '有效事件', itemStyle: { color: themeColors.green } },
+                                    { value: 120, name: '未知语言', itemStyle: { color: themeColors.yellow } },
+                                    { value: 45, name: '未知功能', itemStyle: { color: themeColors.red } }
+                                ],
+                                label: { color: textColor }
+                             }]
+                        },
+                        // New Charts for Tab 7 (LoC)
+                        locFunnel: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'item', formatter: "{a} <br/>{b} : {c}" },
+                            series: [{
+                                name: 'LoC Funnel',
+                                type: 'funnel',
+                                left: '10%', top: 60, bottom: 60, width: '80%',
+                                min: 0, max: 600000,
+                                minSize: '0%', maxSize: '100%',
+                                sort: 'descending',
+                                gap: 2,
+                                label: { show: true, position: 'inside', color: '#fff' },
+                                itemStyle: { borderColor: '#fff', borderWidth: 1 },
+                                data: [
+                                    { value: 600000, name: '建议添加 (Suggested Add)', itemStyle: { color: themeColors.blue } },
+                                    { value: 480000, name: '实际添加 (Added Sum)', itemStyle: { color: themeColors.green } }
+                                ]
+                            }]
+                        },
+                        agentLocDetail: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: ['Agent 编辑'], axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '添加行数', type: 'bar', data: [2342], itemStyle: { color: themeColors.green } },
+                                { name: '删除行数', type: 'bar', data: [947], itemStyle: { color: themeColors.red } }
+                            ]
+                        },
+                        // New Charts for Tab 8 (Enterprise)
+                        roiTrend: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis' },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'category', data: dates, axisLine: { lineStyle: { color: gridColor } } },
+                            yAxis: { type: 'value', name: '累计节省 ($)', splitLine: { lineStyle: { color: gridColor, opacity: 0.3 } } },
+                            series: [
+                                { name: '累计成本', type: 'line', data: dates.map((_, i) => (i+1) * 2000), itemStyle: { color: themeColors.red }, lineStyle: { type: 'dashed' } },
+                                { name: '累计节省', type: 'line', data: dates.map((_, i) => (i+1) * 7500), itemStyle: { color: themeColors.green }, areaStyle: { opacity: 0.2 } }
+                            ]
+                        },
+                        deptAdoption: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                            legend: { textStyle: { color: textColor }, bottom: 0 },
+                            xAxis: { type: 'value', splitLine: { show: false } },
+                            yAxis: { type: 'category', data: ['移动端', '数据组', '后端', '前端', '平台组'], axisLabel: { color: textColor } },
+                            series: [
+                                { name: '活跃率', type: 'bar', data: [65, 45, 88, 92, 70], itemStyle: { color: themeColors.blue }, label: { show: true, position: 'right', formatter: '{c}%', color: 'white' } }
+                            ]
+                        },
+                        securityEvents: {
+                            backgroundColor: 'transparent',
+                            tooltip: { trigger: 'item' },
+                            legend: { orient: 'vertical', left: 'left', textStyle: { color: textColor } },
+                            series: [{
+                                type: 'pie', radius: ['40%', '70%'], center: ['60%', '50%'],
+                                itemStyle: { borderRadius: 5, borderColor: themeColors.dark, borderWidth: 2 },
+                                data: [
+                                    { value: 15, name: 'PII 拦截', itemStyle: { color: themeColors.red } },
+                                    { value: 8, name: '密钥泄露拦截', itemStyle: { color: themeColors.orange } },
+                                    { value: 120, name: '公共代码匹配', itemStyle: { color: themeColors.yellow } },
+                                    { value: 4500, name: '安全代码生成', itemStyle: { color: themeColors.green } }
+                                ]
+                            }]
+                        }
+                    };
+                };
+
+                const renderCharts = () => {
+                    const opts = getChartOptions();
+                    if (currentView.value === 'usage') {
+                        initChart('chart_users', opts.users);
+                        initChart('chart_lang_pie', opts.langPie);
+                        initChart('chart_chat_modes', opts.chatModes);
+                        initChart('chart_model_daily', opts.modelDaily);
+                        initChart('chart_model_lang_mini', opts.modelLangMini);
+                        initChart('chart_lang_daily_mini', opts.langDailyMini);
+                    } else if (currentView.value === 'codegen') {
+                        initChart('chart_loc_daily', opts.locDaily);
+                        initChart('chart_loc_lang_source', opts.locLangSource);
+                        initChart('chart_loc_model_source', opts.locModelSource);
+                    } else if (currentView.value === 'api') {
+                        initChart('chart_ide_dist', opts.ideDist);
+                        initChart('chart_feature_usage', opts.featureUsage);
+                        initChart('chart_lang_feature', opts.langFeature);
+                        initChart('chart_model_feature', opts.modelFeature);
+                    } else if (currentView.value === 'pr') {
+                        initChart('chart_pr_trend', opts.prTrend);
+                    } else if (currentView.value === 'engagement') {
+                        initChart('chart_chat_mode_pie', opts.chatModePie);
+                        initChart('chart_mode_model_stack', opts.modeModelStack);
+                    } else if (currentView.value === 'data_quality') {
+                        initChart('chart_unknown_breakdown', opts.unknownBreakdown);
+                    } else if (currentView.value === 'loc_deep') {
+                        initChart('chart_loc_funnel', opts.locFunnel);
+                        initChart('chart_agent_loc_detail', opts.agentLocDetail);
+                    } else if (currentView.value === 'enterprise') {
+                        initChart('chart_roi_trend', opts.roiTrend);
+                        initChart('chart_dept_adoption', opts.deptAdoption);
+                        initChart('chart_security_events', opts.securityEvents);
+                    }
+                };
+
+                watch(currentView, () => {
+                    nextTick(() => {
+                        renderCharts();
+                    });
+                });
+
+                onMounted(() => {
+                    renderCharts();
+                    window.addEventListener('resize', () => {
+                        document.querySelectorAll('.chart-container').forEach(el => {
+                            const instance = echarts.getInstanceByDom(el);
+                            if (instance) instance.resize();
+                        });
+                    });
+                });
+
+                const formatNumber = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+                return {
+                    currentView,
+                    categories,
+                    metrics,
+                    userVersions,
+                    formatNumber
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

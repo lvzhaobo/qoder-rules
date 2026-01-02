@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>企业 AI 编码辅助资料清单（CheatSheet）画布 - A3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        /* 打印设置：A3 横向，白色背景 */
+        @page {
+            size: A3 landscape;
+            margin: 10mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI",
+                "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+            color: #111827;
+        }
+
+        body {
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            padding: 8mm;
+            display: flex;
+            flex-direction: column;
+            gap: 4mm;
+            background: #ffffff;
+        }
+
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 3mm;
+        }
+
+        .canvas-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1mm;
+        }
+
+        .canvas-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .canvas-subtitle {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .canvas-tag {
+            font-size: 10px;
+            color: #374151;
+            padding: 1mm 3mm;
+            border-radius: 3mm;
+            border: 1px solid #e5e7eb;
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: 2fr 3fr 3fr;
+            grid-template-rows: auto auto;
+            gap: 4mm;
+            flex: 1;
+        }
+
+        .canvas-grid-wide {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 4mm;
+            flex: 1;
+        }
+
+        .block {
+            border: 1px solid #e5e7eb;
+            border-radius: 2mm;
+            padding: 3mm;
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+        }
+
+        .block-title {
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5mm;
+            margin-bottom: 1mm;
+        }
+
+        .block-tagline {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .pill {
+            display: inline-block;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 0 3mm;
+            font-size: 10px;
+            margin: 0 1mm 1mm 0;
+            white-space: nowrap;
+        }
+
+        .pill-strong {
+            border-color: #111827;
+            font-weight: 600;
+        }
+
+        .section-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+        }
+
+        .section-row-title {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .inline-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5mm 2mm;
+        }
+
+        .mini-note {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2mm;
+        }
+
+        .role-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 1.5mm;
+            padding: 2mm;
+        }
+
+        .role-title {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 1mm;
+        }
+
+        .role-item {
+            font-size: 10px;
+            margin: 0.5mm 0;
+        }
+
+        .role-item strong {
+            font-weight: 600;
+        }
+
+        .lifecycles-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 1mm;
+        }
+
+        .life-col {
+            border: 1px solid #e5e7eb;
+            border-radius: 1.5mm;
+            padding: 1.5mm;
+        }
+
+        .life-title {
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 1mm;
+        }
+
+        .life-body {
+            font-size: 10px;
+        }
+
+        .life-body div {
+            margin-bottom: 0.5mm;
+        }
+
+        .small-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        .small-table th,
+        .small-table td {
+            border: 1px solid #e5e7eb;
+            padding: 1mm 1.5mm;
+        }
+
+        .small-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 2mm;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .canvas {
+                padding: 6mm;
+            }
+            .canvas-grid,
+            .canvas-grid-wide {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="canvas">
+    <!-- 头部：标题 + 关键信息 -->
+    <div class="canvas-header">
+        <div class="canvas-title-block">
+            <div class="canvas-title">企业 AI 编码辅助资料清单（CheatSheet）设计画布</div>
+            <div class="canvas-subtitle">
+                覆盖通义灵码企业知识库 / 指令 / Rules，全生命周期 + 多角色的资料规划一览图
+            </div>
+        </div>
+        <div>
+            <div class="canvas-tag">A3 画布 · 白底简约 · 适合打印评审</div>
+        </div>
+    </div>
+
+    <!-- 中间大画布区域 -->
+    <div class="canvas-grid">
+        <!-- 左:CTO视角决策清单 -->
+        <div class="block">
+            <div class="block-title">🎯 1. CTO 决策清单 & 准备事项</div>
+            <div class="section-row">
+                <div class="section-row-title">1.1 CTO 核心决策点(会前准备)</div>
+                <div class="mini-note">
+                    <strong>决策 1:</strong> 确定试点范围(建议 2-3 个部门,各 1-2 个项目)<br />
+                    <strong>决策 2:</strong> 任命 CoE 牵头人 + 平台管理员(1-2 人)<br />
+                    <strong>决策 3:</strong> 批准预算:培训、工具采购、激励机制<br />
+                    <strong>决策 4:</strong> 设定成功标准(如 3 个月内单测覆盖率提升 20%)<br />
+                    <strong>决策 5:</strong> 审批全局 Rules & 安全红线清单
+                </div>
+            </div>
+            <div class="section-row">
+                <div class="section-row-title">1.2 CTO 需准备的资料包(3-5 份)</div>
+                <div class="mini-note">
+                    ✅ <strong>企业 AI Coding 原则</strong>(1 份):安全红线、责任归属、人机协同原则<br />
+                    ✅ <strong>企业通用编码规范</strong>(1 份):语言中立的基础规范(命名、注释、错误处理)<br />
+                    ✅ <strong>试点项目清单 & Owner 名单</strong>(1 份):含部门、项目名、负责人、时间表<br />
+                    ✅ <strong>评估指标体系</strong>(1 份):效率(周期)、质量(缺陷率)、满意度(问卷)<br />
+                    ✅ <strong>激励机制方案</strong>(1 份):试点团队奖励、优秀案例评选标准
+                </div>
+            </div>
+            <div class="section-row">
+                <div class="section-row-title">1.3 CTO 关键风险管控点</div>
+                <ul class="mini-note">
+                    <li><strong>数据安全:</strong> 禁止将生产数据、密钥、客户 PII 上传 AI 平台</li>
+                    <li><strong>知识产权:</strong> AI 生成代码需人工审查开源协议(避免 GPL 污染)</li>
+                    <li><strong>责任归属:</strong> 明确"AI 是辅助,人是责任主体"的红线</li>
+                    <li><strong>技术债务:</strong> 定期审查 AI 生成代码质量,防止代码膨胀与过度依赖</li>
+                    <li><strong>组织变革:</strong> 预留 1-2 个月适应期,包容短期效率下滑(J 型曲线)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 中：分层知识体系 + 通义灵码结构 -->
+        <div class="block">
+            <div class="block-title">2. 分层知识体系 & 通义灵码结构</div>
+
+            <div class="section-row">
+                <div class="section-row-title">2.1 知识分层（WHAT）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th>层级</th>
+                        <th>典型内容</th>
+                        <th>Owner</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>企业通用层</td>
+                        <td>编码规范、安全基线、流程规范、通义灵码使用规范</td>
+                        <td>技术委员会 / 安全 / 管理</td>
+                    </tr>
+                    <tr>
+                        <td>部门/职能层</td>
+                        <td>前端/后端/测试/安全/架构等专业规范 & 模板</td>
+                        <td>部门负责人</td>
+                    </tr>
+                    <tr>
+                        <td>项目/产品层</td>
+                        <td>领域模型、术语表、API、业务规则</td>
+                        <td>项目负责人 / 架构师</td>
+                    </tr>
+                    <tr>
+                        <td>个人实践层</td>
+                        <td>个人 Prompt、代码片段、常用脚本</td>
+                        <td>各工程师</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">2.2 通义灵码空间规划（WHERE）</div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">企业空间</span>
+                    <span class="pill">ORG-Base（基础规范）</span>
+                    <span class="pill">ORG-Security（安全与合规）</span>
+                </div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">部门空间</span>
+                    <span class="pill">FE-Frontend-Standards</span>
+                    <span class="pill">BE-Backend-Standards</span>
+                    <span class="pill">QA-Testing-Guide</span>
+                    <span class="pill">ARCH-Architecture</span>
+                    <span class="pill">SEC-Security</span>
+                </div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">项目空间</span>
+                    <span class="pill">PROJ-ERP-OrderDomain</span>
+                    <span class="pill">PROJ-XXX-核心应用</span>
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">2.3 知识类型 & 承载形式（HOW）</div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">规范标准</span>
+                    <span class="pill">流程 & 模板</span>
+                    <span class="pill">场景指令</span>
+                    <span class="pill">FAQ / 问题集</span>
+                    <span class="pill">案例与示例</span>
+                    <span class="pill">元信息（命名/标签/维护说明）</span>
+                </div>
+                <div class="mini-note">
+                    · 规范标准 → 企业/部门知识库 + Rules<br />
+                    · 场景指令 → 指令模板库（绑定知识库 & Rules）<br />
+                    · FAQ & 案例 → 重点项目 / 重点故障沉淀，供 AI 快速检索。
+                </div>
+            </div>
+        </div>
+
+        <!-- 右：生命周期 & 关键产出 -->
+        <div class="block">
+            <div class="block-title">3. 研发全生命周期 & 资料沉淀</div>
+
+            <div class="section-row">
+                <div class="section-row-title">3.1 阶段划分（WHEN）</div>
+                <div class="lifecycles-grid">
+                    <div class="life-col">
+                        <div class="life-title">需求/立项</div>
+                        <div class="life-body">
+                            <div>· 中层管理 / 产品 / 架构 / CoE</div>
+                            <div>· 领域简介、术语表、非功能需求</div>
+                        </div>
+                    </div>
+                    <div class="life-col">
+                        <div class="life-title">架构/设计</div>
+                        <div class="life-body">
+                            <div>· 架构 / 前后端 / 安全</div>
+                            <div>· 架构决策、接口规范</div>
+                        </div>
+                    </div>
+                    <div class="life-col">
+                        <div class="life-title">开发</div>
+                        <div class="life-body">
+                            <div>· 前端 / 后端 / DevOps</div>
+                            <div>· 编码规范、项目结构说明</div>
+                        </div>
+                    </div>
+                    <div class="life-col">
+                        <div class="life-title">测试</div>
+                        <div class="life-body">
+                            <div>· 测试 / 开发</div>
+                            <div>· 测试策略、用例模板</div>
+                        </div>
+                    </div>
+                    <div class="life-col">
+                        <div class="life-title">安全审核</div>
+                        <div class="life-body">
+                            <div>· 安全 / 架构</div>
+                            <div>· 安全清单、安全编码规范</div>
+                        </div>
+                    </div>
+                    <div class="life-col">
+                        <div class="life-title">上线 & 运维</div>
+                        <div class="life-body">
+                            <div>· DevOps / 运维 / 开发</div>
+                            <div>· 发布流程、回滚方案、告警手册</div>
+                        </div>
+                    </div>
+                    <div class="life-col">
+                        <div class="life-title">复盘 & 回流</div>
+                        <div class="life-body">
+                            <div>· 管理 / 架构 / CoE</div>
+                            <div>· 典型问题案例、复盘模板</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">3.2 每阶段需沉淀的资料类型</div>
+                <div class="mini-note">
+                    · 需求/立项 → 领域手册、术语表、关键非功能需求。<br />
+                    · 架构/设计 → 架构蓝图、接口规范、ADR（架构决策记录）。<br />
+                    · 开发 → 语言/工程规范、目录结构、脚本模板、常用库示例。<br />
+                    · 测试 → 策略说明、用例模板、覆盖率基线、自动化框架指南。<br />
+                    · 安全 → 安全基线、检查清单、典型漏洞案例。<br />
+                    · 上线/运维 → 发布 & 回滚 SOP，告警处理指引。<br />
+                    · 复盘 → 复盘模板、案例集（问题→原因→改进）。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二层画布：角色视图 + 治理视图 -->
+    <div class="canvas-grid-wide">
+        <!-- 左：关键角色 & 资料包清单（摘要版） -->
+         <!-- 4. 各部门资料准备 TODO 清单 -->
+        <div class="block">
+            <div class="block-title">📋 4. 各部门资料准备 TODO 清单（按优先级 & 阶段）</div>
+            <div class="block-tagline">部门负责人视角：明确每个阶段要做什么、谁来做、什么算完成</div>
+
+            <div class="section-row">
+                <div class="section-row-title">✅ Phase 0: 前置准备（所有部门通用，1-2周）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 8%;">序号</th>
+                        <th style="width: 42%;">TODO 任务</th>
+                        <th style="width: 25%;">责任人</th>
+                        <th style="width: 25%;">完成标准</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>0.1</td>
+                        <td><strong>指定 Owner</strong><br/>确定 1 名技术负责人 + 1 名知识库维护人</td>
+                        <td>部门负责人</td>
+                        <td>Owner 名单已明确并通知 CoE</td>
+                    </tr>
+                    <tr>
+                        <td>0.2</td>
+                        <td><strong>拉齐小组</strong><br/>组织 30-60 分钟工作坊，确认试点目标与场景</td>
+                        <td>技术负责人 + 前后端/测试代表</td>
+                        <td>会议纪要 + 试点项目清单（1-2个）</td>
+                    </tr>
+                    <tr>
+                        <td>0.3</td>
+                        <td><strong>盘点现有文档</strong><br/>列出部门现有规范、流程、模板清单</td>
+                        <td>知识库维护人</td>
+                        <td>文档清单表（含存放位置、Owner、最后更新日期）</td>
+                    </tr>
+                    <tr>
+                        <td>0.4</td>
+                        <td><strong>选择高频场景</strong><br/>从"单测生成/代码评审/安全检查/接口文档/周报"中选 1-2 个</td>
+                        <td>技术负责人</td>
+                        <td>场景清单 + 预期效果描述</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">🔧 Phase 1: 核心资料准备（2-3周，可并行）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 8%;">序号</th>
+                        <th style="width: 42%;">TODO 任务</th>
+                        <th style="width: 25%;">责任人</th>
+                        <th style="width: 25%;">完成标准</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1.1</td>
+                        <td><strong>部门编码规范</strong><br/>整理前端/后端编码规范（1-2份），补齐"适用范围、示例/反例、Owner"</td>
+                        <td>前端/后端负责人</td>
+                        <td>规范文档已评审 + Markdown格式</td>
+                    </tr>
+                    <tr>
+                        <td>1.2</td>
+                        <td><strong>测试规范 & 模板</strong><br/>整理测试策略、用例模板、覆盖率基线（1-2份）</td>
+                        <td>测试负责人</td>
+                        <td>规范文档 + 2-3个测试用例示例</td>
+                    </tr>
+                    <tr>
+                        <td>1.3</td>
+                        <td><strong>评审 Checklist</strong><br/>整理代码评审清单（通用 + 前后端专属）</td>
+                        <td>技术负责人/架构师</td>
+                        <td>Checklist 文档（含必须项/建议项）</td>
+                    </tr>
+                    <tr>
+                        <td>1.4</td>
+                        <td><strong>项目结构说明</strong><br/>梳理试点项目的目录结构、分层架构、关键模块说明</td>
+                        <td>项目架构师</td>
+                        <td>项目 README + 架构图（Mermaid/图片）</td>
+                    </tr>
+                    <tr>
+                        <td>1.5</td>
+                        <td><strong>领域知识 & 术语表</strong><br/>整理业务领域术语、关键实体、核心流程（可选，适用后端）</td>
+                        <td>产品经理 + 架构师</td>
+                        <td>术语表 + 核心领域模型图（1-2页）</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section-row">
+                <div class="section-row-title">🚀 Phase 2: 上传配置（1周）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 8%;">序号</th>
+                        <th style="width: 42%;">TODO 任务</th>
+                        <th style="width: 25%;">责任人</th>
+                        <th style="width: 25%;">完成标准</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>2.1</td>
+                        <td><strong>创建知识库空间</strong><br/>按"企业/部门/项目"命名规范创建知识库空间</td>
+                        <td>平台管理员 + 知识库维护人</td>
+                        <td>空间已创建 + 权限已配置</td>
+                    </tr>
+                    <tr>
+                        <td>2.2</td>
+                        <td><strong>上传核心规范</strong><br/>将 Phase 1 整理的文档上传到通义灵码知识库</td>
+                        <td>知识库维护人</td>
+                        <td>至少 3-5 份文档已上传并同步成功</td>
+                    </tr>
+                    <tr>
+                        <td>2.3</td>
+                        <td><strong>配置部门指令</strong><br/>围绕选定场景，设计 3-5 条部门专用指令模板</td>
+                        <td>技术负责人 + CoE</td>
+                        <td>指令已配置 + 测试通过（含知识库绑定）</td>
+                    </tr>
+                    <tr>
+                        <td>2.4</td>
+                        <td><strong>配置 Rules</strong><br/>设置部门级 Rules（编码规范、禁用 API 清单等）</td>
+                        <td>技术负责人 + CoE</td>
+                        <td>Rules 已配置并生效</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section-row">
+                <div class="section-row-title">🧪 Phase 3: 试点验证（2-4周）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 8%;">序号</th>
+                        <th style="width: 42%;">TODO 任务</th>
+                        <th style="width: 25%;">责任人</th>
+                        <th style="width: 25%;">完成标准</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>3.1</td>
+                        <td><strong>小范围试跑</strong><br/>在 1-2 个试点项目中使用配置好的指令进行 AI Coding</td>
+                        <td>试点项目组全员</td>
+                        <td>至少完成 1-2 个迭代（2-4周）</td>
+                    </tr>
+                    <tr>
+                        <td>3.2</td>
+                        <td><strong>收集使用数据</strong><br/>记录指令调用次数、满意度、问题清单</td>
+                        <td>知识库维护人</td>
+                        <td>数据表格（含场景、次数、评分、问题）</td>
+                    </tr>
+                    <tr>
+                        <td>3.3</td>
+                        <td><strong>迭代优化</strong><br/>根据反馈调整规范文档、指令话术、Rules 配置</td>
+                        <td>技术负责人 + 知识库维护人</td>
+                        <td>至少完成 1 轮优化（文档/指令已更新）</td>
+                    </tr>
+                    <tr>
+                        <td>3.4</td>
+                        <td><strong>典型案例沉淀</strong><br/>收集 2-3 个好用/不好用的典型案例</td>
+                        <td>CoE + 试点项目组</td>
+                        <td>案例库（含场景、输入、输出、评价）</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section-row">
+                <div class="section-row-title">📊 Phase 4: 复盘汇报（1周）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 8%;">序号</th>
+                        <th style="width: 42%;">TODO 任务</th>
+                        <th style="width: 25%;">责任人</th>
+                        <th style="width: 25%;">完成标准</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>4.1</td>
+                        <td><strong>数据汇总</strong><br/>整理试点期间的效率、质量、满意度数据</td>
+                        <td>知识库维护人 + 项目经理</td>
+                        <td>数据报表（含对比基线）</td>
+                    </tr>
+                    <tr>
+                        <td>4.2</td>
+                        <td><strong>复盘会议</strong><br/>组织部门内复盘会，总结经验与问题</td>
+                        <td>技术负责人</td>
+                        <td>会议纪要 + 问题清单 + 改进计划</td>
+                    </tr>
+                    <tr>
+                        <td>4.3</td>
+                        <td><strong>向管理层汇报</strong><br/>输出 1 页试点总结（PPT/PDF）</td>
+                        <td>部门负责人 + 技术负责人</td>
+                        <td>汇报材料（含效果、问题、下一步计划）</td>
+                    </tr>
+                    <tr>
+                        <td>4.4</td>
+                        <td><strong>推广决策</strong><br/>决定是否推广到本部门其他项目</td>
+                        <td>部门负责人 + CTO</td>
+                        <td>推广计划 or 调整计划（已批准）</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">✅ DONE 标准：本部门"AI Coding 准备就绪"</div>
+                <ul class="mini-note">
+                    <li>✅ 至少 1 套部门级规范（编码/测试/评审）已整理并上传到通义灵码知识库</li>
+                    <li>✅ 至少 3-5 条高频场景指令已配置并在试点项目中实际使用过</li>
+                    <li>✅ 试点项目完成至少 1-2 个迭代（2-4周），有使用数据支撑</li>
+                    <li>✅ 完成 1 次部门复盘，有数据或案例支撑"继续推广/调整优化"的决策</li>
+                    <li>✅ 向管理层汇报并获得推广批准（或明确调整方向）</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="block">
+            <div class="block-title">5. 关键角色 & 资料包（WHAT by WHO）</div>
+            <div class="two-column">
+                <div class="role-card">
+                    <div class="role-title">前端团队</div>
+                    <div class="role-item"><strong>规范：</strong>前端编码规范（TS/JS/Vue/React），工程 & 目录规范。</div>
+                    <div class="role-item"><strong>组件：</strong>组件设计 & 命名规范 + 公共组件文档（5–20）。</div>
+                    <div class="role-item"><strong>测试：</strong>前端单测 & E2E 模板，Mock 规范。</div>
+                    <div class="role-item"><strong>指令：</strong>“生成组件 / 路由 / 前端单测”等 5–10 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">后端团队</div>
+                    <div class="role-item"><strong>规范：</strong>各技术栈编码规范，分层架构规范。</div>
+                    <div class="role-item"><strong>接口：</strong>API 设计 & 错误码 & 分页规范。</div>
+                    <div class="role-item"><strong>领域：</strong>领域建模说明（1–3 份 / 领域）。</div>
+                    <div class="role-item"><strong>测试：</strong>单元/集成测试模板，性能与稳定性规范。</div>
+                    <div class="role-item"><strong>指令：</strong>“按领域模型生成仓储/服务”等 5–10 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">测试团队</div>
+                    <div class="role-item"><strong>策略：</strong>测试分层策略（单测/集成/E2E）。</div>
+                    <div class="role-item"><strong>方法：</strong>用例设计方法 & 模板（3–5）。</div>
+                    <div class="role-item"><strong>指标：</strong>覆盖率基线 & 度量规范。</div>
+                    <div class="role-item"><strong>自动化：</strong>框架使用说明、脚本示例。</div>
+                    <div class="role-item"><strong>指令：</strong>“生成测试用例 / Mock 场景”等 5–10 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">安全审核团队</div>
+                    <div class="role-item"><strong>规范：</strong>安全编码规范，常见漏洞说明。</div>
+                    <div class="role-item"><strong>清单：</strong>Web/移动/后端安全检查清单（3–5）。</div>
+                    <div class="role-item"><strong>流程：</strong>安全评审流程 & 报告模板。</div>
+                    <div class="role-item"><strong>案例：</strong>典型安全事件 & 防范建议。</div>
+                    <div class="role-item"><strong>指令：</strong>“作为安全专家审查代码/配置”等 3–5 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">代码审核 / 质量团队</div>
+                    <div class="role-item"><strong>Checklist：</strong>通用 + 前后端专属评审清单（2–4）。</div>
+                    <div class="role-item"><strong>流程：</strong>评审流程、角色分工、通过标准。</div>
+                    <div class="role-item"><strong>案例：</strong>良好/不良修改示例（5–10）。</div>
+                    <div class="role-item"><strong>指令：</strong>“按公司规范评审以下代码”等 3–5 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">中层管理团队</div>
+                    <div class="role-item"><strong>流程：</strong>标准项目流程 & 里程碑。</div>
+                    <div class="role-item"><strong>模板：</strong>周报/月报/复盘报告模板（3–5）。</div>
+                    <div class="role-item"><strong>风险：</strong>风险清单 & 应对策略。</div>
+                    <div class="role-item"><strong>指令：</strong>“根据数据生成周报/复盘提纲”等 5–10 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">架构团队</div>
+                    <div class="role-item"><strong>原则：</strong>架构原则 & 技术栈约束（1–2）。</div>
+                    <div class="role-item"><strong>蓝图：</strong>关键系统拓扑 & 数据流。</div>
+                    <div class="role-item"><strong>决策：</strong>ADR 模板 + 示例（3–5）。</div>
+                    <div class="role-item"><strong>评审：</strong>架构评审检查清单。</div>
+                    <div class="role-item"><strong>指令：</strong>“给出架构方案 & 选型对比”等 3–5 条。</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-title">最佳实践团队 / CoE</div>
+                    <div class="role-item"><strong>总览：</strong>企业通用最佳实践目录。</div>
+                    <div class="role-item"><strong>专题：</strong>单测 / 微服务治理等专题实践（每专题 1–2）。</div>
+                    <div class="role-item"><strong>模板：</strong>通用 CheatSheet 模板（空白 + 示例）。</div>
+                    <div class="role-item"><strong>维护：</strong>知识库建设 & 维护指南。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三层画布：指令模板 + 治理机制 -->
+    <div class="canvas-grid-wide">
+        <!-- 左：指令模板 & Rules 棋盘 -->
+        <div class="block">
+            <div class="block-title">6. 指令模板 & Rules 配置棋盘</div>
+            <div class="section-row">
+                <div class="section-row-title">6.1 全局 Rules（所有场景生效）</div>
+                <div class="mini-note">
+                    · 统一语言/编码规范（按技术栈绑定）。<br />
+                    · 禁用内部黑名单 API / 组件 / 配置方式。<br />
+                    · 安全 & 合规底线（不输出敏感信息、不绕过安全控制）。<br />
+                    · 通用输出风格（如统一使用中文、Markdown、带表格等）。
+                </div>
+            </div>
+            <div class="section-row">
+                <div class="section-row-title">6.2 场景 Rules（按职能 / 阶段）</div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">代码生成助手</span>
+                    <span class="pill">前端/后端按各自编码规范 & 工程结构</span>
+                    <span class="pill">优先使用企业封装库</span>
+                </div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">代码评审助手</span>
+                    <span class="pill">按评审 Checklist 输出问题 & 建议</span>
+                    <span class="pill">区分"必须修改 / 建议优化"</span>
+                </div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">安全审核助手</span>
+                    <span class="pill">按安全清单逐项检查</span>
+                    <span class="pill">指明潜在漏洞 & 修复建议</span>
+                </div>
+                <div class="inline-list">
+                    <span class="pill pill-strong">测试生成助手</span>
+                    <span class="pill">按用例模板输出</span>
+                    <span class="pill">标注等价类 / 边界 / 异常场景</span>
+                </div>
+            </div>
+            <div class="section-row">
+                <div class="section-row-title">6.3 指令模板库（示意）</div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th>场景</th>
+                        <th>示例指令</th>
+                        <th>依赖知识库/Rules</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>生成单测</td>
+                        <td>根据公司单测规范为以下代码生成测试用例</td>
+                        <td>测试策略 + 单测模板 + 语言规范</td>
+                    </tr>
+                    <tr>
+                        <td>代码评审</td>
+                        <td>作为本公司评审助手，按评审 Checklist 审查以下代码</td>
+                        <td>评审 Checklist + 编码规范 + 安全规范</td>
+                    </tr>
+                    <tr>
+                        <td>安全审核</td>
+                        <td>作为安全审核专家，检查以下配置/代码的安全风险</td>
+                        <td>安全编码规范 + 安全检查清单</td>
+                    </tr>
+                    <tr>
+                        <td>管理报表</td>
+                        <td>根据以下数据生成周报，并标出风险与下一步计划</td>
+                        <td>项目流程 & 里程碑 + 报告模板</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section-row">
+                <div class="section-row-title">6.4 不同角色提示词模板（示例）</div>
+                <div class="mini-note">
+                    以下为各关键角色的典型提示词骨架，可在企业内部根据实际规范进一步细化和本地化。
+                </div>
+                <table class="small-table">
+                    <thead>
+                    <tr>
+                        <th>角色</th>
+                        <th>典型提示词模板（片段）</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>前端工程师</td>
+                        <td>"作为本公司的前端工程师，请根据《前端编码规范》和《组件设计规范》，使用 {框架/技术栈} 为以下需求生成组件代码，并给出必要的单元测试：..."</td>
+                    </tr>
+                    <tr>
+                        <td>后端工程师</td>
+                        <td>"作为本公司的后端工程师，请遵循《后端编码规范》《分层架构规范》与《API 设计规范》，为以下领域场景生成 {Controller/Service/Repository} 代码和相应的单元测试：..."</td>
+                    </tr>
+                    <tr>
+                        <td>测试工程师</td>
+                        <td>"作为本公司的测试工程师，请依据《测试策略》《用例模板》和覆盖率要求，为以下接口/功能生成测试用例（含正常/异常/边界场景）：..."</td>
+                    </tr>
+                    <tr>
+                        <td>安全审核</td>
+                        <td>"作为本公司的安全审核专家，请对以下代码/配置进行安全审查，参照《安全编码规范》和《安全检查清单》，列出潜在风险和整改建议：..."</td>
+                    </tr>
+                    <tr>
+                        <td>代码评审</td>
+                        <td>"作为本公司的代码评审助手，请根据《代码评审 Checklist》和相关编码规范，对以下变更进行评审，按'必须修改 / 建议优化'分类给出意见：..."</td>
+                    </tr>
+                    <tr>
+                        <td>架构师</td>
+                        <td>"作为本公司的架构师，请基于《架构原则》《技术栈约束》和现有系统蓝图，为以下业务背景给出 1–2 个候选架构方案，并对比优缺点：..."</td>
+                    </tr>
+                    <tr>
+                        <td>项目经理 / 管理者</td>
+                        <td>"作为本公司的项目经理，请根据以下项目数据和《项目流程 & 里程碑规范》，生成一份本周项目周报，包含进展、风险、问题与下一步计划：..."</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 右：治理机制 & 实施路线 -->
+        <div class="block">
+            <div class="block-title">7. 治理机制 & 实施路线</div>
+
+            <div class="section-row">
+                <div class="section-row-title">7.1 角色分工（治理视角）</div>
+                <div class="mini-note">
+                    · 企业级 Owner（技术委员会 / CoE）：企业通用规范、全局 Rules。<br />
+                    · 部门级 Owner（技术负责人）：部门知识库 & 指令模板。<br />
+                    · 项目级 Owner（项目经理 / 架构师）：项目专属知识库（领域、接口、规则）。<br />
+                    · 平台管理员：空间 & 权限配置、Rules & 指令模板上线。
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">7.2 知识建设流程（从零到上线）</div>
+                <ol class="mini-note">
+                    <li>资料收集：各团队收集现有规范、模板、经验文档。</li>
+                    <li>结构化整理：按"层级 + 场景 + 角色"归类，清理冗余。</li>
+                    <li>评审归一：Owner 组织评审，合并版本、废弃过时内容。</li>
+                    <li>上传配置：按命名 & 标签规范上传到通义灵码知识库，配置 Rules & 指令。</li>
+                    <li>试点验证：选 1–2 个部门 + 项目试运行，收集反馈。</li>
+                    <li>推广 & 巡检：扩展至全公司，建立季度巡检与更新机制。</li>
+                </ol>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">7.3 度量与反馈（成功标准）</div>
+                <div class="mini-note">
+                    · 覆盖度：已接入知识库 / 指令的部门 & 项目占比。<br />
+                    · 使用度：指令模板调用次数、知识库命中率。<br />
+                    · 质量效果：缺陷密度、上线事故数的变化趋势。<br />
+                    · 效率收益：需求到上线周期、评审 & 测试人效提升情况。
+                </div>
+            </div>
+
+            <div class="section-row">
+                <div class="section-row-title">7.4 待管理层对齐的关键决策点</div>
+                <div class="mini-note">
+                    · 命名 & 标签体系是否全公司统一？<br />
+                    · 企业/部门/项目知识库的权限边界如何划分？<br />
+                    · 首批试点的部门与项目范围？<br />
+                    · 通义灵码在文档格式、容量、同步上的平台限制 & 最佳实践？<br />
+                    · 最终采用哪些业务指标作为 AI 赋能的成功标准？
+                </div>
+            </div>
+            <div class="section-row">
+                <div class="section-row-title">7.5 平台与安全治理要点（摘要）</div>
+                <div class="mini-note">
+                    · 数据与隔离：企业级空间/租户隔离，企业知识库内容仅在本企业内部使用，不作为公共模型训练数据来源。<br />
+                    · 权限与责任：企业级、部门级、项目级分别设置知识库 Owner 与编辑/只读权限，关键 Rules 变更需审批。<br />
+                    · 审计与追溯：记录重要知识库与 Rules 的变更历史，必要时可回滚到指定版本。<br />
+                    · 工具共存：通义灵码知识库以"结构化副本/摘要"形式存在，规范的唯一事实源仍保留在现有 Wiki/文档平台中。</r
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部注释 -->
+    <div class="footer-row">
+        <div>本画布用于在管理层 & 各技术团队之间对齐“建设什么资料 + 谁来做 + 何时完成”。</div>
+        <div>建议：打印 A3 横向，会议中逐块评审 & 补充各团队的具体文档清单。</div>
+    </div>
+</div>
+</body>
+</html>
