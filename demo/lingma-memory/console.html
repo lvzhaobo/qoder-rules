@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通义灵码企业级记忆系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f0f0f0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            padding: 10px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #e0e0e0;
+            border-right: 2px solid #ccc;
+            padding: 15px 0;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            padding: 10px 15px;
+            font-weight: bold;
+            background-color: #d0d0d0;
+            border-bottom: 1px solid #bbb;
+            font-size: 16px;
+        }
+
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #d9d9d9;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: #d5d5d5;
+        }
+
+        .menu-item.active {
+            background-color: #c0c0c0;
+            font-weight: bold;
+        }
+
+        .menu-subitem {
+            padding: 8px 30px;
+            cursor: pointer;
+            border-bottom: 1px solid #d9d9d9;
+            font-size: 14px;
+        }
+
+        .menu-subitem:hover {
+            background-color: #d5d5d5;
+        }
+
+        .menu-subitem.active {
+            background-color: #c0c0c0;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f8f8;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #444;
+            margin: 20px 0 10px 0;
+            padding-left: 10px;
+            border-left: 4px solid #666;
+        }
+
+        h3 {
+            color: #555;
+            margin: 15px 0 8px 0;
+            padding-left: 10px;
+        }
+
+        h4 {
+            color: #666;
+            margin: 12px 0 6px 0;
+            padding-left: 10px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .section-content {
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .subsection {
+            margin-left: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 2px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .canvas-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        canvas {
+            border: 1px solid #aaa;
+            background-color: #fff;
+            border-radius: 4px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border: 1px solid #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-title">记忆系统层级</div>
+            <div class="menu-item" data-target="overview">概述</div>
+            <div class="menu-item" data-target="architecture">记忆系统分层架构</div>
+            
+            <div class="menu-subitem" data-target="enterprise-layer">1. 企业级知识库层</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="general-kb">1.1 企业通用知识库</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="dept-kb">1.2 业务部门知识库</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="project-kb">1.3 项目级知识库</div>
+            
+            <div class="menu-subitem" data-target="code-prediction-layer">2. 代码智能预测层</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="inline-prediction">2.1 行间代码预测</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="snippet-memory">2.2 代码片段记忆库</div>
+            
+            <div class="menu-subitem" data-target="config-layer">3. 企业后台配置层</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="extension-commands">3.1 扩展指令配置</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="strategy-config">3.2 企业策略配置</div>
+            
+            <div class="menu-subitem" data-target="rules-layer">4. 规则与规范层</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="enterprise-rules">4.1 企业级Rules系统</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="bu-data">4.2 BU部门级别资料库</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="project-specs">4.3 项目级规范体系</div>
+            
+            <div class="menu-subitem" data-target="standards-layer">5. 研发规范与检查层</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="project-standards">5.1 项目级研发规范</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="dept-standards">5.2 部门级研发标准</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="personal-tips">5.3 个人级优化提示</div>
+            
+            <div class="menu-subitem" data-target="builtin-memory">6. 通义灵码内置记忆层</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="session-memory">6.1 会话记忆</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="context-memory">6.2 上下文记忆</div>
+            
+            <div class="menu-item" data-target="mechanisms">记忆系统管理机制</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="sync-mechanism">数据同步机制</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="permission-mgmt">权限管理</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="performance-optimization">性能优化</div>
+            
+            <div class="menu-item" data-target="implementation">实施建议</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="phased-implementation">分阶段实施</div>
+            <div class="menu-subitem" style="padding-left: 40px;" data-target="monitoring">监控与维护</div>
+            
+            <div class="menu-item" data-target="summary">总结</div>
+            <div class="menu-item" data-target="visualization">可视化展示</div>
+        </div>
+
+        <div class="content">
+            <div id="overview" class="content-section active">
+                <h1>通义灵码企业级记忆系统</h1>
+                <div class="section-content">
+                    <h2>概述</h2>
+                    <p>通义灵码作为企业级AI编码助手，其记忆系统是实现智能化编程辅助的核心组件。本设计文档详细介绍了通义灵码的记忆系统架构，包括多层级的知识库、规范体系和智能规则，形成完整的企业级记忆模型。</p>
+                </div>
+            </div>
+
+            <div id="architecture" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="section-content">
+                    <h2>记忆系统分层架构</h2>
+                    <p>本记忆系统采用分层架构设计，从企业级到个人级，实现全方位的知识管理和智能辅助。</p>
+                </div>
+            </div>
+
+            <div id="enterprise-layer" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="section-content">
+                    <h2>1. 企业级知识库层</h2>
+                    <p>企业级知识库层是整个记忆系统的基础，提供企业范围内的知识存储和管理功能。</p>
+                </div>
+            </div>
+
+            <div id="general-kb" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="subsection">
+                    <h3>1.1 企业通用知识库</h3>
+                    <ul>
+                        <li><strong>功能描述</strong>：存储企业通用的技术文档、架构规范、开发标准等</li>
+                        <li><strong>数据类型</strong>：
+                            <ul>
+                                <li>技术架构文档</li>
+                                <li>企业技术栈规范</li>
+                                <li>通用开发指南</li>
+                                <li>安全规范要求</li>
+                            </ul>
+                        </li>
+                        <li><strong>访问权限</strong>：全企业范围可访问</li>
+                        <li><strong>更新机制</strong>：定期同步企业知识库更新</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="dept-kb" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="subsection">
+                    <h3>1.2 业务部门知识库</h3>
+                    <ul>
+                        <li><strong>功能描述</strong>：针对不同业务部门的专属知识存储</li>
+                        <li><strong>分类方式</strong>：
+                            <ul>
+                                <li>按业务线分类（如电商、金融、物流等）</li>
+                                <li>按技术栈分类（如前端、后端、移动端等）</li>
+                            </ul>
+                        </li>
+                        <li><strong>管理方式</strong>：部门负责人维护，权限控制</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="project-kb" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="subsection">
+                    <h3>1.3 项目级知识库</h3>
+                    <ul>
+                        <li><strong>功能描述</strong>：特定项目的专属知识库</li>
+                        <li><strong>内容包括</strong>：
+                            <ul>
+                                <li>项目架构设计</li>
+                                <li>业务逻辑文档</li>
+                                <li>API接口规范</li>
+                                <li>数据库设计文档</li>
+                                <li>部署配置说明</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="code-prediction-layer" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="section-content">
+                    <h2>2. 代码智能预测层</h2>
+                    <p>代码智能预测层基于上下文和历史数据，提供智能化的代码预测和补全功能。</p>
+                </div>
+            </div>
+
+            <div id="inline-prediction" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="subsection">
+                    <h3>2.1 行间代码预测知识库</h3>
+                    <ul>
+                        <li><strong>功能描述</strong>：基于上下文的智能代码预测系统</li>
+                        <li><strong>核心技术</strong>：
+                            <ul>
+                                <li>上下文感知编码</li>
+                                <li>代码模式识别</li>
+                                <li>语义理解与预测</li>
+                            </ul>
+                        </li>
+                        <li><strong>实现方式</strong>：
+                            <ul>
+                                <li>实时分析代码上下文</li>
+                                <li>学习团队编码习惯</li>
+                                <li>提供个性化的代码补全</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="snippet-memory" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="subsection">
+                    <h3>2.2 代码片段记忆库</h3>
+                    <ul>
+                        <li><strong>功能描述</strong>：存储常用代码片段和最佳实践</li>
+                        <li><strong>分类管理</strong>：
+                            <ul>
+                                <li>语言特定代码片段</li>
+                                <li>框架特定实现</li>
+                                <li>业务特定逻辑</li>
+                            </ul>
+                        </li>
+                        <li><strong>智能推荐</strong>：根据当前上下文智能推荐相关代码片段</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="config-layer" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="section-content">
+                    <h2>3. 企业后台配置层</h2>
+                    <p>企业后台配置层提供企业级的策略配置和扩展功能管理。</p>
+                </div>
+            </div>
+
+            <div id="extension-commands" class="content-section">
+                <h1>记忆系统分层架构</h1>
+                <div class="subsection">
+                    <h3>3.1 扩展指令配置</h3>
+                    <ul>
+                        <li><strong>自定义指令系统</strong>：
+                            <ul>
+                                <li>企业特定命令</li>
+                                <li>业务流程指令</li>
+                                <li>自动化脚本</li>
+                            </ul>
+                        </li>
+                        <li><strong>配置管理</strong>：
+                            <ul>
+                                <li>指令权限控制</li>
+                                <li>版本管理</li>
+                                <li>使用统计分析</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="strategy-config" class="content-section">
+                <
