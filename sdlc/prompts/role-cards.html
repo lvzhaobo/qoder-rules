@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDLC Agent 角色卡片 - 软件开发全生命周期智能助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #2d3436 0%, #000000 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 背景网格效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 10px;
+        }
+
+        .role-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.6s ease-out;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .card-header {
+            padding: 30px 20px;
+            color: #fff;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #1a1a1a;
+            border-bottom: 3px solid;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+        }
+
+        /* 不同角色的颜色主题 - 企业工卡风格 */
+        .role-personal .card-header { border-color: #9b59b6; color: #9b59b6; background: #1a1a1a; }
+        .role-architect .card-header { border-color: #2ecc71; color: #2ecc71; background: #1a1a1a; }
+        .role-security .card-header { border-color: #e74c3c; color: #e74c3c; background: #1a1a1a; }
+        .role-reflector .card-header { border-color: #e84393; color: #e84393; background: #1a1a1a; }
+        .role-designer .card-header { border-color: #00cec9; color: #00cec9; background: #1a1a1a; }
+        .role-pm .card-header { border-color: #00b894; color: #00b894; background: #1a1a1a; }
+        .role-devops .card-header { border-color: #fdcb6e; color: #fdcb6e; background: #1a1a1a; }
+        .role-management .card-header { border-color: #a29bfe; color: #a29bfe; background: #1a1a1a; }
+        .role-product .card-header { border-color: #fd79a8; color: #fd79a8; background: #1a1a1a; }
+        .role-backend .card-header { border-color: #ff7675; color: #ff7675; background: #1a1a1a; }
+        .role-frontend .card-header { border-color: #fab1a0; color: #fab1a0; background: #1a1a1a; }
+        .role-qa .card-header { border-color: #ffeaa7; color: #ffeaa7; background: #1a1a1a; }
+
+        .role-icon {
+            font-size: 4em;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+            flex-shrink: 0;
+        }
+
+        .role-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .role-name {
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .role-name-en {
+            font-size: 0.85em;
+            opacity: 0.7;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .role-level {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #2d3436;
+            color: #ffd700;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border: 1px solid #ffd700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .role-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .skills-section {
+            margin-top: 20px;
+        }
+
+        .skills-title {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            color: #555;
+            border-radius: 15px;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .skill-tag:hover {
+            background: #2d3436;
+            color: #ffd700;
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .card-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f8f8;
+        }
+
+        .scenarios-count {
+            font-size: 0.9em;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-btn {
+            padding: 10px 24px;
+            background: #2d3436;
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85em;
+        }
+
+        .view-btn:hover {
+            background: #ffd700;
+            color: #2d3436;
+            transform: translateY(-2px);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 浮动动画 */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .role-card:hover .role-icon {
+            animation: float 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 SDLC Agent 角色阵容</h1>
+            <p>软件开发全生命周期智能助手团队</p>
+        </div>
+
+        <!-- 所有角色卡片统一展示 -->
+        <div class="cards-container">
+            <!-- 全能助手 -->
+            <div class="role-card role-personal" onclick="openRole('personal-productivity.md')">
+                <div class="card-header">
+                    <div class="role-icon">🔧</div>
+                    <div class="role-info">
+                        <div class="role-name">全能助手</div>
+                        <div class="role-name-en">Universal Assistant</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 全员通用</span>
+                    <p class="role-description">
+                        快速提升个人开发效率的全能助手，帮助处理日常开发中的琐碎任务和疑难问题。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">遗留代码理解</span>
+                            <span class="skill-tag">自动化工具</span>
+                            <span class="skill-tag">报错排查</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 3 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 架构大师 -->
+            <div class="role-card role-architect" onclick="openRole('architect.md')">
+                <div class="card-header">
+                    <div class="role-icon">🏗️</div>
+                    <div class="role-info">
+                        <div class="role-name">架构大师</div>
+                        <div class="role-name-en">Architect Master</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 架构师</span>
+                    <p class="role-description">
+                        精通系统架构设计、技术选型和架构可视化，能够快速分析和优化系统架构。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">全链路扫描</span>
+                            <span class="skill-tag">C4架构图</span>
+                            <span class="skill-tag">时序图</span>
+                            <span class="skill-tag">原理可视化</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 4 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 安全守卫 -->
+            <div class="role-card role-security" onclick="openRole('security-expert.md')">
+                <div class="card-header">
+                    <div class="role-icon">🛡️</div>
+                    <div class="role-info">
+                        <div class="role-name">安全守卫</div>
+                        <div class="role-name-en">Security Guardian</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 安全专家</span>
+                    <p class="role-description">
+                        专注于代码安全审计、性能优化和漏洞检测，守护系统安全的第一道防线。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">性能分析</span>
+                            <span class="skill-tag">安全扫描</span>
+                            <span class="skill-tag">并发审计</span>
+                            <span class="skill-tag">OWASP Top 10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 红队挑战者 -->
+            <div class="role-card role-reflector" onclick="openRole('reflector.md')">
+                <div class="card-header">
+                    <div class="role-icon">🤔</div>
+                    <div class="role-info">
+                        <div class="role-name">红队挑战者</div>
+                        <div class="role-name-en">Red Team Challenger</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 反思者</span>
+                    <p class="role-description">
+                        以批判性思维挑战方案，模拟高层质疑和极限场景，帮助完善技术方案。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">盲点挖掘</span>
+                            <span class="skill-tag">攻击面分析</span>
+                            <span class="skill-tag">高层质疑</span>
+                            <span class="skill-tag">方案优化</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- UI/UX 设计师 -->
+            <div class="role-card role-designer" onclick="openRole('designer.md')">
+                <div class="card-header">
+                    <div class="role-icon">🎨</div>
+                    <div class="role-info">
+                        <div class="role-name">UI/UX 设计师</div>
+                        <div class="role-name-en">UI/UX Designer</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ 设计专家</span>
+                    <p class="role-description">
+                        快速输出高保真原型，验证UI布局想法，加速产品评审流程。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">原型设计</span>
+                            <span class="skill-tag">响应式布局</span>
+                            <span class="skill-tag">深色模式</span>
+                            <span class="skill-tag">Tailwind CSS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 项目经理 -->
+            <div class="role-card role-pm" onclick="openRole('project-manager.md')">
+                <div class="card-header">
+                    <div class="role-icon">📈</div>
+                    <div class="role-info">
+                        <div class="role-name">项目经理</div>
+                        <div class="role-name-en">Project Manager</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ PM</span>
+                    <p class="role-description">
+                        精通任务拆解、进度管理和风险控制，确保项目按时高质量交付。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">WBS拆解</span>
+                            <span class="skill-tag">进度跟踪</span>
+                            <span class="skill-tag">风险管理</span>
+                            <span class="skill-tag">资源调度</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 2 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 运维工程师 -->
+            <div class="role-card role-devops" onclick="openRole('devops-engineer.md')">
+                <div class="card-header">
+                    <div class="role-icon">🚀</div>
+                    <div class="role-info">
+                        <div class="role-name">运维工程师</div>
+                        <div class="role-name-en">DevOps Engineer</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ DevOps</span>
+                    <p class="role-description">
+                        自动化部署、CI/CD流水线配置专家，确保系统稳定高效运行。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">自动化部署</span>
+                            <span class="skill-tag">CI/CD流水线</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">K8s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 2 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 运维组长 -->
+            <div class="role-card role-devops" onclick="openRole('ops-lead.md')">
+                <div class="card-header">
+                    <div class="role-icon">👨‍💼</div>
+                    <div class="role-info">
+                        <div class="role-name">运维组长</div>
+                        <div class="role-name-en">Operations Lead</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 组长</span>
+                    <p class="role-description">
+                        基础设施审计、安全合规和成本优化专家，保障系统安全稳定。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">K8s审计</span>
+                            <span class="skill-tag">安全检查</span>
+                            <span class="skill-tag">成本优化</span>
+                            <span class="skill-tag">高可用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 研发总监 -->
+            <div class="role-card role-management" onclick="openRole('rd-director.md')">
+                <div class="card-header">
+                    <div class="role-icon">👨‍💼</div>
+                    <div class="role-info">
+                        <div class="role-name">研发总监</div>
+                        <div class="role-name-en">R&D Director</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 高级管理</span>
+                    <p class="role-description">
+                        系统稳定性审计和研发效能管理专家，用数据驱动团队效能提升。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">稳定性审计</span>
+                            <span class="skill-tag">效能扫描</span>
+                            <span class="skill-tag">DORA指标</span>
+                            <span class="skill-tag">SRE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 2 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 产品经理 -->
+            <div class="role-card role-product" onclick="openRole('product-manager.md')">
+                <div class="card-header">
+                    <div class="role-icon">📱</div>
+                    <div class="role-info">
+                        <div class="role-name">产品经理</div>
+                        <div class="role-name-en">Product Manager</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ PM</span>
+                    <p class="role-description">
+                        需求拆解、用户故事编写和数据埋点设计专家，连接业务与技术的桥梁。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">需求拆解</span>
+                            <span class="skill-tag">用户故事</span>
+                            <span class="skill-tag">数据埋点</span>
+                            <span class="skill-tag">INVEST原则</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 产品总监 -->
+            <div class="role-card role-product" onclick="openRole('product-director.md')">
+                <div class="card-header">
+                    <div class="role-icon">🎯</div>
+                    <div class="role-info">
+                        <div class="role-name">产品总监</div>
+                        <div class="role-name-en">Product Director</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 高级管理</span>
+                    <p class="role-description">
+                        PRD评审、路线图规划和需求优先级管理专家，用数据驱动产品决策。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">PRD评审</span>
+                            <span class="skill-tag">路线图规划</span>
+                            <span class="skill-tag">RICE模型</span>
+                            <span class="skill-tag">优先级管理</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 2 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 后端开发 -->
+            <div class="role-card role-backend" onclick="openRole('backend-developer.md')">
+                <div class="card-header">
+                    <div class="role-icon">💻</div>
+                    <div class="role-info">
+                        <div class="role-name">后端开发</div>
+                        <div class="role-name-en">Backend Developer</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ 开发者</span>
+                    <p class="role-description">
+                        企业级API设计和后端业务逻辑实现专家，构建稳定可靠的服务端系统。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">API设计</span>
+                            <span class="skill-tag">Spring Boot</span>
+                            <span class="skill-tag">分布式锁</span>
+                            <span class="skill-tag">高并发</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 后端组长 -->
+            <div class="role-card role-backend" onclick="openRole('backend-lead.md')">
+                <div class="card-header">
+                    <div class="role-icon">👨‍💻</div>
+                    <div class="role-info">
+                        <div class="role-name">后端组长</div>
+                        <div class="role-name-en">Backend Team Lead</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 组长</span>
+                    <p class="role-description">
+                        代码审查、架构决策和技术债务管理专家，保证代码库长期健康。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">Code Review</span>
+                            <span class="skill-tag">架构决策</span>
+                            <span class="skill-tag">技术债务</span>
+                            <span class="skill-tag">DDD</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 2 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 前端开发 -->
+            <div class="role-card role-frontend" onclick="openRole('frontend-developer.md')">
+                <div class="card-header">
+                    <div class="role-icon">🖥️</div>
+                    <div class="role-info">
+                        <div class="role-name">前端开发</div>
+                        <div class="role-name-en">Frontend Developer</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ 开发者</span>
+                    <p class="role-description">
+                        基于Design System的组件开发专家，打造一致、优雅的用户界面。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">组件封装</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">TypeScript</span>
+                            <span class="skill-tag">Design System</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 前端组长 -->
+            <div class="role-card role-frontend" onclick="openRole('frontend-lead.md')">
+                <div class="card-header">
+                    <div class="role-icon">👨‍💻</div>
+                    <div class="role-info">
+                        <div class="role-name">前端组长</div>
+                        <div class="role-name-en">Frontend Team Lead</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐⭐ 组长</span>
+                    <p class="role-description">
+                        性能审计、工程化规范和前后端协作专家，保障前端应用流畅度。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">性能优化</span>
+                            <span class="skill-tag">Hook规范</span>
+                            <span class="skill-tag">Mock数据</span>
+                            <span class="skill-tag">A11y</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 2 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+
+            <!-- 测试工程师 -->
+            <div class="role-card role-qa" onclick="openRole('qa-engineer.md')">
+                <div class="card-header">
+                    <div class="role-icon">🧪</div>
+                    <div class="role-info">
+                        <div class="role-name">测试工程师</div>
+                        <div class="role-name-en">QA Engineer</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="role-level">⭐⭐⭐⭐ QA</span>
+                    <p class="role-description">
+                        自动化测试用例生成和边界测试专家，确保产品质量和稳定性。
+                    </p>
+                    <div class="skills-section">
+                        <div class="skills-title">🎯 核心技能</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">自动化测试</span>
+                            <span class="skill-tag">边界测试</span>
+                            <span class="skill-tag">数据驱动</span>
+                            <span class="skill-tag">安全测试</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="scenarios-count">📋 1 个场景</span>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openRole(filename) {
+            window.open(filename, '_blank');
+        }
+
+        // 为卡片添加入场动画延迟
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.role-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.05}s`;
+            });
+        });
+    </script>
+</body>
+</html>

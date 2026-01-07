@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件开发全生命周期角色与组长审核提示词表 (企业实战版)</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            color: #2c3e50;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .enterprise-context-box {
+            background-color: #e8f0fe;
+            border: 1px solid #b3d4fc;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            color: #1a73e8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border: 1px solid #dfe2e5;
+            font-size: 0.9em;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #dfe2e5;
+            padding: 12px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+        th {
+            background-color: #f1f3f5;
+            font-weight: 700;
+            color: #495057;
+            text-align: left;
+        }
+        /* Column Widths Configuration */
+        th:nth-child(1) { width: 6%; }  /* 领域 */
+        th:nth-child(2) { width: 8%; }  /* 角色 */
+        th:nth-child(3) { width: 10%; } /* 场景 */
+        th:nth-child(4) { width: 46%; } /* 提示词 */
+        th:nth-child(5) { width: 30%; } /* 预计输出 */
+
+        /* Row Styling */
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        tr:hover { background-color: #f1f3f5; }
+
+        /* Role Badge Styling */
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+        .role-executor { background-color: #e3f2fd; color: #0d47a1; border: 1px solid #bbdefb; }
+        .role-lead { background-color: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+        .role-personal { background-color: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; } /* 新增：个人效能 */
+        .role-reflector { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; } /* 新增：反思者 */
+        .role-arch { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; } /* 新增：架构师 */
+        .role-pm { background-color: #e0f2f1; color: #00695c; border: 1px solid #b2dfdb; } /* 新增：项目经理 */
+        .role-ops { background-color: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; } /* 复用或新增 DevOps */
+        .role-mgr { background-color: #eceff1; color: #37474f; border: 1px solid #cfd8dc; } /* 新增：管理者 */
+        .role-design { background-color: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; } /* 新增：设计 */
+
+        /* Domain Header Styling */
+        .domain-cell {
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            background-color: #fff;
+        }
+
+        /* Prompt Styling */
+        .prompt-container { position: relative; }
+        .prompt-text {
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            color: #333;
+            font-size: 0.9em;
+        }
+        .prompt-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #555;
+            font-size: 0.85em;
+        }
+        .placeholder {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* Expected Output Styling */
+        .output-list { margin: 0; padding-left: 20px; color: #444; }
+        .output-list li { margin-bottom: 4px; }
+        .output-effect {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #eee;
+            color: #27ae60;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SDLC 全生命周期：执行与审核提示词参考表 (企业实战版)</h1>
+    <p class="subtitle">针对大型企业 50+ 开发团队场景优化，区分个人效能、团队交付与管理审核视角</p>
+
+    <div class="enterprise-context-box">
+        <strong>💡 企业级使用指南：</strong> 为了获得最佳效果，请在使用 Prompt 前注入企业上下文。
+        <br>建议将通用规则配置在 IDE 的 System Prompt 中：
+        <code>“你是一位就职于 [公司名称] 的高级工程师。我们的技术栈是 [Spring Boot 2.7 / React 18]，内部封装库为 [MyCorp-Common-Lib]。请遵循 [阿里巴巴Java开发手册] 规范。回答请保持简洁专业。”</code>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>领域</th>
+                <th>角色</th>
+                <th>典型场景</th>
+                <th>深度提示词 (Prompt) <span style="font-weight:normal; color:#666;">(红色为需替换的占位符)</span></th>
+                <th>预计输出与效果</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ================= 个人效能 (Personal Productivity) ================= -->
+            <tr>
+                <td rowspan="3" class="domain-cell">个人效能<br>Personal</td>
+                <td rowspan="3"><span class="role-badge role-personal">全员通用</span></td>
+                <td>遗留代码理解<br>(Legacy Code)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：快速接手看不懂的“祖传代码”</span>
+                        <div class="prompt-text">我需要接手维护这段 <span class="placeholder">[Java/Python]</span> 遗留代码。请作为资深架构师：
+1. **逻辑可视化**：用 Mermaid 流程图画出其核心执行路径。
+2. **业务翻译**：用通俗的语言解释这段代码在做什么业务（注意：它似乎处理了 <span class="placeholder">[订单状态流转]</span>）。
+3. **风险预警**：指出代码中硬编码的“魔术数字”和潜在的 NullPointerException 风险。
+4. **重构建议**：如果不破坏现有逻辑，如何用 <span class="placeholder">[Java 8 Stream]</span> 简化它？
+
+代码片段：
+`[粘贴代码]`</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>可视化的 Mermaid 流程图</li>
+                        <li>通俗易懂的业务逻辑说明</li>
+                        <li>防御性编程的改进建议</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：降低新人上手老旧系统的门槛，减少因理解偏差导致的 Bug。</div>
+                </td>
+            </tr>
+            <tr>
+                <td>微任务自动化<br>(Toolkit)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：解决正则、Cron、JSON转换等琐碎痛点</span>
+                        <div class="prompt-text">我需要处理一个文本匹配任务。
+需求：匹配 <span class="placeholder">[符合公司工号格式（W+6位数字）]</span> 的字符串。
+请输出：
+1. **正则表达式**：兼容 <span class="placeholder">[JavaScript]</span> 环境。
+2. **测试用例**：提供 3 个匹配成功和 3 个匹配失败的样本。
+3. **解释**：逐段解释正则含义。
+4. **代码片段**：生成一个 TypeScript 函数 `isValidEmployeeId(id: string)`。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>精准的正则表达式</li>
+                        <li>开箱即用的验证函数</li>
+                        <li>完备的测试数据</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：将开发者从记忆琐碎语法中解放出来，专注于核心逻辑。</div>
+                </td>
+            </tr>
+            <tr>
+                <td>报错排查<br>(Debugging)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：根据日志快速定位根因</span>
+                        <div class="prompt-text">我的程序报错了，堆栈信息如下。
+环境：<span class="placeholder">[Spring Boot 2.7, JDK 11, MySQL 8]</span>。
+最近我修改了：<span class="placeholder">[数据库连接池配置]</span>。
+
+堆栈信息：
+`[粘贴 StackTrace]`
+
+请分析：
+1. **直接原因**：是什么具体的异常？
+2. **关联推测**：这是否和我修改的连接池配置有关？
+3. **解决方案**：给出 2 种可能的修复方案（临时规避 vs 根治）。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>异常原因的深度解析</li>
+                        <li>排查思路的引导</li>
+                        <li>可复制的修复代码</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：缩短 MTTR（平均修复时间），提升开发者的独立解决问题能力。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 深度分析与反思 (Deep Analysis & Reflection) ================= -->
+            <tr>
+                <td rowspan="3" class="domain-cell">深度分析<br>Analysis</td>
+                <td><span class="role-badge role-arch">架构师</span></td>
+                <td>全链路扫描<br>(Deep Scan)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：扫描依赖、环境与技术栈</span>
+                        <div class="prompt-text">请对当前项目/模块进行深度扫描：
+1. **依赖分析**：扫描 <span class="placeholder">[pom.xml / package.json]</span>，列出所有第三方库及其版本，标记出过时或高风险的依赖。
+2. **环境依赖**：识别代码中对特定 OS、JDK 版本或环境变量的隐式依赖。
+3. **类依赖图**：分析类 <span class="placeholder">[OrderService]</span> 的耦合度，列出它依赖了哪些内部模块（如 `UserModule`, `PaymentModule`）。
+4. **技术栈快照**：总结当前使用的核心技术栈（如 Spring Boot 2.7, React 18, MyBatis-Plus）。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>依赖健康度报告</li>
+                        <li>环境约束清单</li>
+                        <li>模块耦合度拓扑图</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：快速掌握项目全貌，识别架构腐化风险。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-arch">安全专家</span></td>
+                <td>性能与安全<br>(Perf & Sec)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：发现性能瓶颈与安全漏洞</span>
+                        <div class="prompt-text">请作为资深安全专家和性能调优专家分析此代码：
+1. **性能瓶颈**：找出时间复杂度 > O(n) 的循环、未关闭的 I/O 流、大对象内存分配及 N+1 查询问题。
+2. **安全漏洞**：扫描 OWASP Top 10 风险（特别是 SQL 注入、XSS、越权访问、敏感信息硬编码）。
+3. **并发风险**：检查是否存在死锁、竞态条件或线程不安全的操作。
+4. **修复方案**：针对发现的每个问题，提供具体的代码修复建议。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>性能热点清单</li>
+                        <li>安全漏洞审计报告</li>
+                        <li>并发安全性评估</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：在代码提交前消除“炸弹”，提升系统稳健性。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-reflector">反思者</span></td>
+                <td>红队挑战<br>(Red Teaming)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：模拟高层质疑与极限边界挑战</span>
+                        <div class="prompt-text">你是一位挑剔的“反思者” (Devil's Advocate)。请批判性地审视这段代码/方案：
+1. **盲点挖掘**：我遗漏了哪些极端的边界情况？（如：并发量激增 100 倍、网络中断、数据库宕机）。
+2. **漏洞反思**：如果黑客要攻击这个功能，他们会从哪里下手？
+3. **高层拷问**：如果我把这个方案提交给 CTO，针对“扩展性”、“维护成本”和“ROI”，他会问哪 3 个最尖锐的问题？请模拟他的语气提问。
+4. **自我否定**：是否存在更简单、更低成本的替代方案？</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>未覆盖的边缘案例清单</li>
+                        <li>攻击面分析</li>
+                        <li>模拟 CTO 的尖锐提问 (Q&A)</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：打破思维定势，提前准备高层汇报的防御性问答 (FAQ)。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 可视化与设计 (Visualization & Design) ================= -->
+            <tr>
+                <td rowspan="4" class="domain-cell">可视化<br>Visualization</td>
+                <td><span class="role-badge role-arch">架构师</span></td>
+                <td>C4 架构图<br>(Architecture)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：生成清晰的 Mermaid C4 系统上下文图</span>
+                        <div class="prompt-text">请为 <span class="placeholder">[电商订单系统]</span> 生成 Mermaid C4 Context 图。
+1. **系统边界**：核心是 OrderSystem。
+2. **外部依赖**：包含 PaymentGateway (第三方支付), UserCenter (内部 RPC), InventoryDB (数据库)。
+3. **用户**：MobileUser, AdminUser。
+4. **关系**：描述清楚 User -> OrderSystem -> PaymentGateway 的调用流向。
+5. **代码要求**：输出标准 Mermaid 代码，确保图表布局合理。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>Mermaid C4 代码块</li>
+                        <li>清晰的系统边界定义</li>
+                        <li>外部依赖关系梳理</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：一键生成架构图，快速对齐系统上下文。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-executor">开发/架构</span></td>
+                <td>复杂时序图<br>(Sequence)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：梳理复杂的异步业务流程</span>
+                        <div class="prompt-text">请生成 Mermaid 时序图，描述“订单支付成功后的回调处理”流程：
+1. **参与方**：PaymentService, OrderService, MQ, InventoryService, NotificationService。
+2. **流程**：
+   - PaymentService 收到回调 -> 更新本地流水 -> 发送 MQ 消息。
+   - OrderService 消费 MQ -> 幂等检查 -> 更新订单状态。
+   - OrderService -> 调用 InventoryService 扣减库存 (RPC)。
+   - 并行：调用 NotificationService 发送短信。
+3. **异常**：如果库存扣减失败，需体现补偿逻辑 (Compensating Transaction)。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>包含异步/并行逻辑的时序图</li>
+                        <li>异常路径的可视化</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：将晦涩的文字流程转化为直观的时序图，减少沟通歧义。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-arch">技术布道师</span></td>
+                <td>原理可视化<br>(Dynamic Canvas)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：用动态图形解释抽象算法</span>
+                        <div class="prompt-text">我需要给团队讲解 <span class="placeholder">[Raft 共识算法的 Leader 选举]</span> 过程。
+请编写一个单文件 HTML：
+1. **画布**：使用 HTML5 Canvas 或 SVG。
+2. **逻辑**：用 JavaScript 模拟 5 个节点的状态（Follower/Candidate/Leader）。
+3. **动画**：
+   - 显示“心跳包”从 Leader 发出的动态效果。
+   - 模拟 Leader 宕机，节点变色并发起投票的过程。
+4. **交互**：点击节点可模拟宕机/恢复。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>可交互的 HTML 演示文件</li>
+                        <li>动态的算法执行过程</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：让抽象的技术原理“活”起来，极大地降低理解门槛。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-design">设计师/产品</span></td>
+                <td>UI 原型设计<br>(Prototyping)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：快速输出高保真原型代码</span>
+                        <div class="prompt-text">请设计一个“企业级数据监控仪表盘”的 UI 原型。
+1. **工具**：HTML + Tailwind CSS (通过 CDN 引入)。
+2. **布局**：左侧侧边栏导航，顶部 Header，右侧内容区。
+3. **组件**：
+   - 4 个关键指标卡片 (KPI Cards)。
+   - 一个占满宽度的折线图区域 (用 Placeholder 图片或 CSS 模拟)。
+   - 一个最近告警列表 (Table)。
+4. **风格**：深色模式 (Dark Mode)，科技感配色。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>响应式的 HTML/CSS 原型</li>
+                        <li>现代化的 UI 布局</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：无需 Figma 即可快速验证 UI 布局想法，加速产品评审。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 项目管理 (Project Management) ================= -->
+            <tr>
+                <td rowspan="2" class="domain-cell">项目管理<br>PM</td>
+                <td><span class="role-badge role-pm">项目经理</span></td>
+                <td>WBS 任务拆解<br>(Task Breakdown)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：将需求拆解为可执行的 Jira 任务</span>
+                        <div class="prompt-text">我们即将启动 <span class="placeholder">[会员积分商城 v1.0]</span> 项目。核心功能包括：积分赚取、商品兑换、积分过期。
+请作为资深 PM：
+1. **任务拆解**：生成一份 WBS (工作分解结构)，拆分到 0.5~2 人日的粒度。
+2. **估时**：为每个任务预估开发工时 (Man-Hours)。
+3. **依赖**：标出任务间的前置依赖关系。
+4. **格式**：输出为 Markdown 表格，包含列：[模块, 子任务, 描述, 预估工时, 依赖任务, 推荐人员角色]。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>结构化的 WBS 任务表</li>
+                        <li>工时预估参考</li>
+                        <li>任务依赖关系图</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：实现精细化管理，避免漏项，辅助排期。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-pm">项目经理</span></td>
+                <td>进度与风险分析<br>(Progress & Risk)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：基于周报识别项目风险</span>
+                        <div class="prompt-text">这是团队本周的日报汇总（见附录）。项目截止日期是下周五。
+请分析：
+1. **进度偏差**：哪些模块滞后了？滞后原因是什么（技术难点/需求变更）？
+2. **风险预警**：是否存在关键路径阻塞？（如：前端在等后端接口）。
+3. **调整建议**：是否需要协调资源或砍掉低优先级功能？请给出 3 个可行的纠偏方案。
+4. **周报摘要**：生成一份给 CTO 看的精简版项目周报。
+
+附录：`[粘贴团队日报]`</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>项目健康度诊断</li>
+                        <li>风险应对策略</li>
+                        <li>高层汇报摘要</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：主动识别风险，从“事后救火”转变为“事前管理”。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 运维与部署 (DevOps & Cloud) ================= -->
+            <tr>
+                <td rowspan="2" class="domain-cell">运维部署<br>DevOps</td>
+                <td><span class="role-badge role-ops">运维工程师</span></td>
+                <td>阿里云 ECS 部署<br>(Cloud Deploy)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：生成自动化部署脚本</span>
+                        <div class="prompt-text">我需要将一个 Spring Boot JAR 包部署到阿里云 ECS (CentOS 7)。
+请编写一个 Shell 脚本 (`deploy.sh`)：
+1. **环境检查**：检查是否安装 JDK 17，未安装则自动使用 Yum 安装 (Alibaba Dragonwell)。
+2. **进程管理**：优雅停止旧的 Java 进程 (kill -15 -> wait -> kill -9)。
+3. **备份**：将旧 JAR 包备份到 `backup/` 目录，带上时间戳。
+4. **启动**：使用 `nohup` 启动新 JAR，配置 JVM 参数 (`-Xms512m -Xmx512m`)，并将日志重定向到 `app.log`。
+5. **健康检查**：脚本最后 curl 本地 `actuator/health` 接口验证启动是否成功。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>健壮的 Shell 部署脚本</li>
+                        <li>包含备份与健康检查机制</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：标准化单机部署流程，减少人为操作失误。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-ops">DevOps</span></td>
+                <td>CI/CD 流水线<br>(Pipeline)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：配置云效/Jenkins 流水线</span>
+                        <div class="prompt-text">请为项目生成 <span class="placeholder">[阿里云云效 Flow / GitLab CI]</span> 的流水线配置 (YAML)。
+阶段要求：
+1. **Build**：使用 Maven 编译构建，缓存 `~/.m2` 目录。
+2. **Test**：运行单元测试，如果覆盖率低于 80% 则中断流水线。
+3. **Scan**：集成 SonarQube 进行代码质量扫描。
+4. **Image**：构建 Docker 镜像并推送到阿里云 ACR (Registry)。
+5. **Deploy**：在开发分支自动部署到 K8s Dev 集群。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>完整的流水线 YAML 配置文件</li>
+                        <li>集成了质量门禁 (Quality Gate)</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：实现“提交即部署”，保障代码交付流水线的标准化与自动化。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 管理与效能 (Management & Insight) ================= -->
+            <tr>
+                <td rowspan="2" class="domain-cell">管理视窗<br>Management</td>
+                <td><span class="role-badge role-mgr">研发总监</span></td>
+                <td>稳定性审计<br>(Reliability)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：评估系统的稳定性指标</span>
+                        <div class="prompt-text">请作为 SRE 专家，根据以下 Prometheus/Grafana 监控数据快照（或日志片段），分析系统健康状况：
+1. **黄金指标**：分析延迟 (Latency)、流量 (Traffic)、错误 (Errors)、饱和度 (Saturation)。
+2. **异常模式**：是否存在周期性的 Full GC？是否存在连接池泄露迹象？
+3. **SLO 风险**：当前错误率是否消耗了过多的错误预算 (Error Budget)？
+4. **建议**：给出 3 条提升系统可用性的架构建议（如：熔断、降级、扩容）。
+
+数据片段：`[粘贴监控数据]`</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>系统健康度诊断报告</li>
+                        <li>SRE 视角的优化建议</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：量化评估系统稳定性，用数据指导架构优化方向。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-mgr">研发总监</span></td>
+                <td>效能扫描<br>(Efficiency)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：诊断团队研发效能瓶颈</span>
+                        <div class="prompt-text">请分析团队最近一个月的 Git 提交记录和 Jira 流转记录（见附录）。
+请评估：
+1. **流动效率**：平均 PR 合并时间 (Cycle Time) 是多少？是否存在长期不合并的分支？
+2. **质量指标**：Bug/Story 比率如何？返工率（Re-open）高吗？
+3. **瓶颈识别**：是否卡在“Code Review”环节？还是卡在“测试”环节？
+4. **改进计划**：针对识别出的瓶颈，提出 DORA 指标提升计划。
+
+数据摘要：`[粘贴统计数据]`</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>研发效能诊断报告</li>
+                        <li>DORA 指标分析</li>
+                        <li>流程改进建议</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：识别研发流程中的“阻滞点”，提升团队交付吞吐量。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 产品领域 (End of New Insertions) ================= -->
+            <tr>
+                <td rowspan="3" class="domain-cell">产品<br>Product</td>
+                <td><span class="role-badge role-executor">产品经理</span></td>
+                <td>复杂需求拆解<br>& 用户故事</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：将模糊的业务诉求转化为可开发的标准文档</span>
+                        <div class="prompt-text">你是一位拥有 10 年经验的高级产品经理。请将以下业务需求转化为符合 INVEST 原则的敏捷用户故事。
+业务需求：“<span class="placeholder">[我们需要一个积分商城，用户可以用积分换礼物]</span>。”
+
+请输出：
+1. **用户故事** (As a... I want to... So that...)
+2. **详细验收标准 (AC)**：请使用 Gherkin 语法 (Given/When/Then)，覆盖正常兑换、积分不足、库存不足、高并发扣减等场景。
+3. **数据埋点**：基于 <span class="placeholder">[神策/Google Analytics]</span> 格式定义埋点事件。
+4. **边缘案例**：列出至少 3 个容易被忽略的异常流程。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>标准的敏捷用户故事卡片</li>
+                        <li>Gherkin 格式的可测试验收标准</li>
+                        <li>清晰的数据埋点定义</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：开发人员能直接理解业务边界，测试人员可直接转化为测试用例。</div>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2"><span class="role-badge role-lead">产品总监</span></td>
+                <td>PRD 评审<br>& 逻辑查漏</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：审核 PRD 的完整性、逻辑闭环及商业价值</span>
+                        <div class="prompt-text">你是一位严厉的产品总监。请评审上述“积分商城”用户故事：
+1. **逻辑漏洞**：状态机是否闭环？（如：退货后积分是否返还？）
+2. **价值评估**：这个功能是否真的解决了用户痛点，还是伪需求？
+3. **依赖检查**：该功能是否依赖 <span class="placeholder">[会员系统/库存中心]</span> 的改造？
+4. **改进建议**：给出 3 条具体的修改建议。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>逻辑漏洞清单（如状态机缺失）</li>
+                        <li>跨系统依赖分析</li>
+                        <li>具体的文档修改意见</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：在开发介入前拦截逻辑错误，防止“伪需求”浪费研发资源。</div>
+                </td>
+            </tr>
+            <tr>
+                <td>路线图规划<br>& 优先级评估</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：基于资源限制进行科学的需求排期</span>
+                        <div class="prompt-text">目前积压了 10 个需求（见附录），但研发资源只能支持开发 3 个。请使用 RICE 评分模型（Reach, Impact, Confidence, Effort）对这些需求进行打分和排序。
+请输出：
+1. **RICE 评分表**：列出每个维度的预估分值及理由。
+2. **排期建议**：推荐本季度优先做的 3 个功能。
+3. **沟通话术**：针对被砍掉的高关注度需求，生成一段解释话术。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>量化的需求优先级列表</li>
+                        <li>科学的排期决策依据</li>
+                        <li>高情商的沟通话术</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：用数据驱动决策，减少拍脑袋决策，平衡业务方预期。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 后端领域 ================= -->
+            <tr>
+                <td rowspan="3" class="domain-cell">后端<br>Backend</td>
+                <td><span class="role-badge role-executor">后端开发</span></td>
+                <td>企业级 API 设计<br>(Enterprise API)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：遵循企业标准设计接口</span>
+                        <div class="prompt-text">你是一位 <span class="placeholder">[公司名称]</span> 的后端工程师。请设计“用户抢购”接口 `POST /seckill/order`。
+约束条件：
+1. **框架**：<span class="placeholder">[Spring Boot + MyBatis Plus]</span>。
+2. **鉴权**：集成内部网关鉴权 `@RequirePermission("seckill.buy")`。
+3. **异常处理**：使用公司通用的 `BizException` 和 `Result<T>` 包装器。
+4. **实现**：伪代码需包含 Redis 分布式锁（使用 Redisson）防止超卖。
+
+请提供 Controller 和 Service 层的核心逻辑。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>符合公司规范的伪代码</li>
+                        <li>集成内部组件的示例</li>
+                        <li>标准的 API 接口定义</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：生成的代码直接可用，无需二次修改风格，符合安全合规要求。</div>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2"><span class="role-badge role-lead">后端组长</span></td>
+                <td>代码审查 (Code Review)<br>& 架构合规</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：审查代码的安全性、性能及规范性</span>
+                        <div class="prompt-text">你是一位 Tech Lead。请审查上述“秒杀接口”的伪代码，关注以下风险点：
+1. **并发安全**：是否存在死锁或竞态条件？
+2. **事务粒度**：数据库事务范围是否过大？是否包含了 RPC 调用？
+3. **性能瓶颈**：指出代码中可能导致 QPS 上不去的具体行数。
+4. **规范合规**：变量命名是否符合 <span class="placeholder">[阿里巴巴 Java 开发手册]</span>？
+
+请输出详细的 CR 报告和重构后的代码片段。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>具体的代码风险点清单</li>
+                        <li>事务与并发优化建议</li>
+                        <li>重构后的高质量代码片段</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：保证代码库的长期健康，防止技术债务累积。</div>
+                </td>
+            </tr>
+            <tr>
+                <td>技术债务评估<br>& 架构决策</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：评估重构的必要性与方案</span>
+                        <div class="prompt-text">我们的老旧单体应用 <span class="placeholder">[CRM系统]</span> 面临维护困难。团队正在讨论是否迁移到微服务。
+请作为首席架构师评估：
+1. **现状分析**：分析单体架构在 50 人团队协作下的痛点。
+2. **拆分策略**：建议按 DDD（领域驱动设计）的哪个限界上下文进行拆分？
+3. **风险预警**：分布式事务（Seata/Saga）带来的复杂度成本。
+4. **决策建议**：立即重构还是渐进式绞杀（Strangler Fig Pattern）？</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>架构迁移路线图</li>
+                        <li>微服务引入的风险评估</li>
+                        <li>专业的架构决策建议</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：避免盲目跟风技术架构，确保架构演进符合业务发展阶段。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 前端领域 ================= -->
+            <tr>
+                <td rowspan="3" class="domain-cell">前端<br>Frontend</td>
+                <td><span class="role-badge role-executor">前端开发</span></td>
+                <td>Design System 实现<br>(Component)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：基于公司设计系统开发组件</span>
+                        <div class="prompt-text">请基于 <span class="placeholder">[Ant Design 5 / Material UI]</span>，封装一个业务组件“用户选择器 `UserSelector`”。
+需求：
+1. **样式**：使用 <span class="placeholder">[Tailwind CSS / Styled Components]</span>，遵循公司品牌色 `#0052CC`。
+2. **功能**：支持远程搜索（防抖）、多选、回显。
+3. **接口**：数据源调用 `UserService.search(keyword)`。
+4. **类型**：提供完整的 TypeScript Interface。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>类型安全的组件代码</li>
+                        <li>符合设计规范的样式实现</li>
+                        <li>集成了业务逻辑的复用组件</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：确保 UI 一致性，减少重复造轮子。</div>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2"><span class="role-badge role-lead">前端组长</span></td>
+                <td>性能审计<br>& 工程化规范</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：审查组件的性能、可维护性及 Hook 使用</span>
+                        <div class="prompt-text">请 Review 上述 `UserSelector` 组件：
+1. **渲染性能**：`useMemo` 和 `useCallback` 的使用是否正确？是否存在不必要的重渲染？
+2. **状态管理**：是否应该将搜索逻辑抽离为 `useUserSearch` Hook？
+3. **Prop Drilling**：Props 定义是否过于复杂？
+4. **可访问性**：是否支持键盘操作（A11y）？
+
+请指出代码中的“坏味道”并提供优化方案。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>性能瓶颈分析</li>
+                        <li>代码坏味道清单</li>
+                        <li>架构优化建议</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：防止低质量代码进入主分支，保证前端应用的流畅度。</div>
+                </td>
+            </tr>
+            <tr>
+                <td>跨团队联调<br>(Contract)</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：生成 Mock 数据以解除对后端的依赖</span>
+                        <div class="prompt-text">后端接口 `GET /api/users` 还没开发完，但我需要先开发前端 UI。
+请根据这份 Swagger/OpenAPI 定义（见下文）生成 Mock 数据：
+1. **工具**：使用 <span class="placeholder">[Mock.js / MSW]</span>。
+2. **场景**：生成 20 条数据，包含正常用户、封禁用户、超长名字用户。
+3. **延迟**：模拟 500ms 网络延迟。
+
+OpenAPI 定义：`[粘贴 YAML/JSON]`</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>开箱即用的 Mock 脚本</li>
+                        <li>覆盖边界情况的测试数据</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：前后端并行开发，互不阻塞，提升整体交付效率。</div>
+                </td>
+            </tr>
+
+            <!-- ================= 测试/运维领域 ================= -->
+            <tr>
+                <td rowspan="2" class="domain-cell">测试/运维<br>QA/Ops</td>
+                <td><span class="role-badge role-executor">测试工程师</span></td>
+                <td>自动化用例生成<br>& 边界测试</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：生成健壮的集成测试脚本</span>
+                        <div class="prompt-text">针对“用户注册”接口，请设计自动化测试用例。
+要求：
+1. **工具**：使用 <span class="placeholder">[Pytest + Requests / Postman]</span>。
+2. **覆盖范围**：Happy Path、参数校验、SQL 注入 Payload 尝试。
+3. **环境适配**：从环境变量读取 `BASE_URL`，适应 Dev/Test/Prod 环境。
+4. **数据驱动**：使用数据驱动模式加载 `test_data.csv`。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>可配置的自动化测试脚本</li>
+                        <li>环境无关的测试代码</li>
+                        <li>基础的安全测试 Payload</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：自动化回归测试，确保新功能上线不破坏已有功能。</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="role-badge role-lead">运维组长</span></td>
+                <td>基础设施审计<br>& 成本优化</td>
+                <td>
+                    <div class="prompt-container">
+                        <span class="prompt-label">目标：审计 K8s 配置的安全与成本</span>
+                        <div class="prompt-text">请严格审计这份 Kubernetes Deployment YAML：
+1. **安全隐患**：容器是否以 root 运行？是否限制了 Capabilities？
+2. **资源设置**：Requests/Limits 设置是否合理？（防止 OOM 或 资源浪费）
+3. **高可用**：是否配置了 LivenessProbe 和 PodDisruptionBudget？
+4. **标签规范**：Labels 是否符合 <span class="placeholder">[公司标准，如 app, team, env]</span>？
+
+请输出审计报告，并对高风险项标红。</div>
+                    </div>
+                </td>
+                <td>
+                    <ul class="output-list">
+                        <li>安全与稳定性风险清单</li>
+                        <li>资源配置优化建议</li>
+                        <li>标签规范合规性检查</li>
+                    </ul>
+                    <div class="output-effect">✅ 效果：消除基础设施安全隐患，提升资源利用率，方便成本分摊统计。</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

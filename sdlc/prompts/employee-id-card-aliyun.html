@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿里云员工工卡 - Alibaba Cloud Employee ID</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f2f5 0%, #e8ecf1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+        }
+
+        /* 工卡容器 */
+        .id-card {
+            width: 320px;
+            height: 576px;
+            background: #F5F7FA;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .id-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 48px rgba(255, 125, 0, 0.2);
+        }
+
+        /* 顶部区域 */
+        .card-header {
+            padding: 24px 24px 20px;
+            text-align: center;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #FF7D00 0%, #FF9933 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(255, 125, 0, 0.3);
+        }
+
+        .divider-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FF7D00, transparent);
+            margin: 12px auto;
+        }
+
+        .company-name {
+            font-size: 11px;
+            color: #8c8c8c;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        /* 中间信息区 */
+        .card-body {
+            padding: 28px 24px;
+            display: flex;
+            gap: 16px;
+            background: #F5F7FA;
+        }
+
+        .avatar-section {
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid #FF7D00;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: #8c8c8c;
+            font-weight: 500;
+            box-shadow: 0 4px 16px rgba(255, 125, 0, 0.15);
+        }
+
+        .info-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .info-item {
+            line-height: 1.4;
+        }
+
+        .info-label {
+            font-size: 10px;
+            color: #999999;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            color: #262626;
+            font-weight: 600;
+        }
+
+        .name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .employee-id {
+            font-size: 11px;
+            color: #FF7D00;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        /* 底部区域 */
+        .card-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 115px;
+            background: linear-gradient(135deg, #E6F7FF 0%, #F0F5FF 100%);
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-badge {
+            font-size: 10px;
+            color: #0070CC;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+        }
+
+        .qr-code {
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #8c8c8c;
+            border: 2px solid #FF7D00;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .qr-code::before,
+        .qr-code::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border: 2px solid #FF7D00;
+        }
+
+        .qr-code::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .qr-code::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 9px;
+            color: #595959;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+        }
+
+        /* 装饰元素 */
+        .corner-decoration {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            opacity: 0.1;
+        }
+
+        .corner-decoration.top-left {
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #FF7D00 0%, transparent 100%);
+            border-radius: 0 0 40px 0;
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: 115px;
+            right: 0;
+            background: linear-gradient(315deg, #0070CC 0%, transparent 100%);
+            border-radius: 40px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 示例卡片1 -->
+        <div class="id-card">
+            <div class="corner-decoration top-left"></div>
+            <div class="corner-decoration bottom-right"></div>
+            
+            <div class="card-header">
+                <div class="logo">阿</div>
+                <div class="divider-line"></div>
+                <div class="company-name">ALIBABA CLOUD</div>
+            </div>
+
+            <div class="card-body">
+                <div class="avatar-section">
+                    <div class="avatar">PHOTO</div>
+                </div>
+                <div class="info-section">
+                    <div class="name">张三</div>
+                    <div class="employee-id">ALI-2025-001</div>
+                    <div class="info-item">
+                        <div class="info-label">部门</div>
+                        <div class="info-value">AI解决方案部</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">有效期</div>
+                        <div class="info-value">2025.01 - 2028.01</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="footer-top">
+                    <div class="ai-badge">AI CLOUD</div>
+                    <div class="qr-code">QR</div>
+                </div>
+                <div class="footer-text">
+                    阿里云智能 · 让算力更普惠<br>
+                    Alibaba Cloud Intelligence
+                </div>
+            </div>
+        </div>
+
+        <!-- 示例卡片2 -->
+        <div class="id-card">
+            <div class="corner-decoration top-left"></div>
+            <div class="corner-decoration bottom-right"></div>
+            
+            <div class="card-header">
+                <div class="logo">阿</div>
+                <div class="divider-line"></div>
+                <div class="company-name">ALIBABA CLOUD</div>
+            </div>
+
+            <div class="card-body">
+                <div class="avatar-section">
+                    <div class="avatar">PHOTO</div>
+                </div>
+                <div class="info-section">
+                    <div class="name">李四</div>
+                    <div class="employee-id">ALI-2025-002</div>
+                    <div class="info-item">
+                        <div class="info-label">部门</div>
+                        <div class="info-value">云计算研发中心</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">有效期</div>
+                        <div class="info-value">2025.01 - 2028.01</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="footer-top">
+                    <div class="ai-badge">AI CLOUD</div>
+                    <div class="qr-code">QR</div>
+                </div>
+                <div class="footer-text">
+                    阿里云智能 · 让算力更普惠<br>
+                    Alibaba Cloud Intelligence
+                </div>
+            </div>
+        </div>
+
+        <!-- 示例卡片3 -->
+        <div class="id-card">
+            <div class="corner-decoration top-left"></div>
+            <div class="corner-decoration bottom-right"></div>
+            
+            <div class="card-header">
+                <div class="logo">阿</div>
+                <div class="divider-line"></div>
+                <div class="company-name">ALIBABA CLOUD</div>
+            </div>
+
+            <div class="card-body">
+                <div class="avatar-section">
+                    <div class="avatar">PHOTO</div>
+                </div>
+                <div class="info-section">
+                    <div class="name">王五</div>
+                    <div class="employee-id">ALI-2025-003</div>
+                    <div class="info-item">
+                        <div class="info-label">部门</div>
+                        <div class="info-value">数据智能事业部</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">有效期</div>
+                        <div class="info-value">2025.01 - 2028.01</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="footer-top">
+                    <div class="ai-badge">AI CLOUD</div>
+                    <div class="qr-code">QR</div>
+                </div>
+                <div class="footer-text">
+                    阿里云智能 · 让算力更普惠<br>
+                    Alibaba Cloud Intelligence
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 卡片悬浮动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.id-card');
+            cards.forEach((card, index) => {
+                card.style.animation = `cardAppear 0.6s ease-out ${index * 0.1}s both`;
+            });
+        });
+
+        // 添加入场动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes cardAppear {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

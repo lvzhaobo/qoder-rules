@@ -166,6 +166,8 @@ python tools/spec-lint.py --target-dir ./src --spec-dir ./core
 #   ⚠️  警告: 2
 ```
 
+test
+
 ### Spec Report - 合规报告
 
 ```bash
